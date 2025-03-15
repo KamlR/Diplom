@@ -1,0 +1,12 @@
+.body {
+  margin: 0; /* Убираем отступы */
+  padding: 0; /* Убираем отступы */
+  background-image: url('/Users/karinamavletova/Downloads/907d7b222f4b2b803c2fa63bf307275f.png'); /* Указываем путь к изображению */
+  background-size: cover; /* Изображение покрывает весь экран */
+  background-position: center; /* Центрируем изображение */
+  background-repeat: no-repeat; /* Изображение не повторяется */
+  height: 100vh; /* Занимает всю высоту окна */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

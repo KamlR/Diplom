@@ -1,0 +1,81 @@
+/* Основной контейнер */
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  max-width: 100%;
+  padding: 20px;
+  
+}
+
+/* Заголовок */
+.title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 70px;
+  text-align: center;
+}
+
+/* Кнопка */
+.connectButton {
+  background-color: #65b6f0;
+  color: #fff;
+  font-size: 1.2rem;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-bottom: 20px;
+}
+
+.nextButton{
+  background-color: #65d2f0;
+  color: #fff;
+  font-size: 1.2rem;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 20px;
+}
+
+
+/* Контейнер для адреса */
+.walletAddress {
+  font-size: 1.2rem;
+  color: #ffffff;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  word-wrap: break-word;
+  width: 80%;
+  max-width: 400px;
+}
+
+/* Иконка галочки */
+.walletAddress .checkmark {
+  margin-left: 10px;
+  color: #32cd32; /* Зелёный цвет галочки */
+  font-size: 1.5rem;
+  display: inline-block;
+  line-height: 1;
+}
+
+/* Сообщение об ошибке */
+.errorMessage {
+  font-size: 1.3rem;
+  color: rgb(255, 0, 0); /* Меньше агрессивный красный */
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 400px;
+  text-align: center;
+  transition: all 0.3s ease-in-out; /* Плавная анимация появления */
+}

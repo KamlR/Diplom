@@ -1,0 +1,144 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  flex-direction: column; 
+  background: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+  z-index: 999; /* Обеспечивает, что форма будет поверх контента */
+}
+
+.formContainer {
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 600px;
+  max-width: 100%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.3s ease-out;
+}
+
+h2 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.formGrid {
+  display: grid;
+  margin-top: 30px;
+  grid-template-columns: 1fr 1fr; /* Сетка с двумя колонками */
+  gap: 20px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputGroup label {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.inputGroup input {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  outline: none;
+  transition: border 0.3s;
+}
+
+.inputGroup input:focus {
+  border-color: #4CAF50;
+}
+
+.buttonsWrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  gap: 30px; /* Увеличиваем расстояние между кнопками */
+}
+
+.leftButton,
+.rightButton {
+  padding: 12px 24px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.leftButton {
+  background-color: #f0f0f0;
+  color: #555;
+}
+
+.leftButton:hover {
+  background-color: #ddd;
+}
+
+.rightButton {
+  background-color: #4A90E2; /* Голубой цвет */
+  color: white;
+}
+
+.rightButton:hover {
+  background-color: #357ABD; /* Более темный голубой при наведении */
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(50px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.toast {
+  background-color: #69a46b;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.5s ease-in-out;
+  opacity: 1;
+}
+
+.toast.hide {
+  opacity: 0;
+}
+
+
+.closeButtonDiv{
+  display: flex;
+  justify-content: right;
+  align-items: right;
+}
+.closeButton {
+  width: 30px;
+  height: 30px;
+  background-color: #dbdbdb;
+  color: #494747;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+}
+
+
+.closeButton:hover{
+  background-color: #555;
+  color: #ddd;
+}

@@ -1,0 +1,36 @@
+
+/* Стиль для заголовка "Welcome" */
+.h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+  animation: fadeInUp 1.5s ease-out, scaleIn 2s ease-out; /* Добавляем анимацию увеличения */
+}
+
+/* Анимация для появления текста */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Анимация для увеличения текста из глубины */
+@keyframes scaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3); /* Начальный размер */
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1); /* Финальный размер */
+  }
+}
+
+

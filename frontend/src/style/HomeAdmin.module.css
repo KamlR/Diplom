@@ -1,0 +1,138 @@
+.headerContainer {
+  display: flex;
+  justify-content: space-between; /* Размещение элементов на противоположных сторонах */
+  align-items: center; /* Вертикальное выравнивание по центру */
+}
+
+.home_admin_container {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #333;
+  color: white;
+  padding: 20px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin: 20px 0;
+}
+
+.sidebar button {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  display: block; /* Ссылка становится блочным элементом */
+  padding: 10px;
+  background-color: #444;
+  border-radius: 10px;
+  width: 100%; /* Задаем ширину 100% от родительского элемента */
+  text-align: center; /* Центрируем текст */
+  background-color: #444;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.sidebar a:hover {
+  background-color: #555;
+  transform: translateY(-2px);
+}
+
+
+
+.content {
+  padding: 20px;
+  flex: 1;
+  overflow-y: auto; /* Чтобы контент прокручивался при необходимости */
+}
+
+.employee_list {
+  display: flex;
+  margin-top: 20px;
+  flex-direction: column;
+  gap: 20px;
+  max-height: 80vh; /* Ограничиваем высоту, чтобы включить прокрутку */
+  overflow-y: auto; /* Вертикальная прокрутка */
+}
+
+.employee_card {
+  background-color: #f4f4f4;
+  padding: 15px;
+  border-radius: 10px; /* Закругленные углы */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Легкая тень для карточек */
+}
+
+.employee_card h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.employee_card p {
+  text-align: left;  /* выравнивание текста слева */
+  margin: 5px 0;  /* небольшой отступ между абзацами */
+  font-size: 14px;  /* размер шрифта */
+  color: #555;  /* немного светлее для текста */
+}
+
+.employee_card strong {
+  font-weight: bold;
+}
+
+.error_message {
+  background-color: #f8d7da;  /* светло-красный фон */
+  color: #721c24;  /* темно-красный текст */
+  border: 1px solid #f5c6cb;  /* граница того же цвета */
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-top: 20px;
+  font-weight: bold;
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Добавим анимацию для плавного появления */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+}
+
+.addButton {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 45%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  width: 45px;
+  height: 45px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.addButton:hover {
+  background-color: #0056b3;
+}
+
+.plus {
+  font-size: 24px;
+}
