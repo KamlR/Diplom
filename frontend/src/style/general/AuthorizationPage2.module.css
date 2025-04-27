@@ -1,0 +1,59 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 75vh;
+  max-width: 100%;
+  padding: 20px;
+  border: solid rgb(246, 173, 38);
+  border-radius: 5px;
+  box-shadow: 0 0 30px rgba(246, 173, 38, 0.7), 0 0 30px rgba(246, 173, 38, 0.3); /* Подсветка по всему прямоугольнику */
+  animation: slideUpFadeIn 1s ease-out forwards;
+}
+
+@keyframes slideUpFadeIn {
+  0% {
+    opacity: 0;
+    transform: perspective(500px) rotateX(15deg) translateY(120px); /* ниже, чем было */
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(500px) rotateX(15deg) translateY(0);
+  }
+}
+
+.title {
+  font-size: 3.7rem;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 70px;
+  text-align: center;
+}
+
+
+.statusMessage {
+  font-size: 1.3rem;
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 400px;
+  text-align: center;
+  transition: all 0.3s ease-in-out; /* Плавная анимация появления */
+}
+
+.connectButton {
+  background-color: #679dc3;
+  color: #fff;
+  font-size: 1.2rem;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-bottom: 20px;
+  margin-top: 50px;
+
+  box-shadow: 0 0 15px rgba(246, 173, 38, 0.7), 0 0 30px rgba(246, 173, 38, 0.3);
+}

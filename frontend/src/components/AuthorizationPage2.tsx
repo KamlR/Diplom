@@ -4,9 +4,9 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { ethers } from 'ethers'
 import { v4 as uuidv4 } from 'uuid'
 import axios from 'axios'
-
-import styles from '../style/AuthorizationPage2.module.css'
-import generalStyles from '../style/General.module.css'
+import { getRole } from '../utils/shared'
+import styles from '../style/general/AuthorizationPage2.module.css'
+import generalStyles from '../style/general/General.module.css'
 
 const AuthorizationPage2: React.FC = () => {
   const navigate = useNavigate()
@@ -32,16 +32,25 @@ const AuthorizationPage2: React.FC = () => {
           signature
         })
         if (response.status == 200) {
-          setStatusMessageColor('#28d42b')
+          setStatusMessageColor('#4caf50')
           setStatusMessage('Wallet ownership verified successfully!')
           const { accessToken, existWorker } = await response.data
           localStorage.setItem('access_token', accessToken)
-          setTimeout(() => {
+          setTimeout(async () => {
             if (!existWorker) {
-              navigate('/additional_info_form')
+              navigate('/additional-info-form')
             } else {
-              // TODO: разобраться, куда я иду в зависимости от роли
-              navigate('/home_admin')
+              const role = await getRole(navigate)
+              switch (role) {
+                case 'admin':
+                  navigate('/home-admin')
+                  break
+                case 'hr':
+                  navigate('/home-hr')
+                  break
+                case 'accountant':
+                  navigate('/home-accountant')
+              }
             }
           }, 2000)
         }
@@ -60,7 +69,7 @@ const AuthorizationPage2: React.FC = () => {
         </button>
         {statusMessage && (
           <div className={`${styles.statusMessage}`} style={{ color: statusMessageColor }}>
-            {statusMessage}
+            <b>{statusMessage}</b>
           </div>
         )}
       </div>

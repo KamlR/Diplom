@@ -3,27 +3,31 @@ import axios from 'axios'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { workWithTokens } from '../utils/shared'
-
-import styles from '../style/AdditionalInfoForm.module.css'
-import generalStyles from '../style/General.module.css'
+import { ToastContainer, toast } from 'react-toastify'
+import styles from '../style/general/AdditionalInfoForm.module.css'
+import generalStyles from '../style/general/General.module.css'
 
 const AditionalInfoForm: React.FC = () => {
   const navigate = useNavigate()
   const [firstName, setFirstName] = useState<string>('')
   const [lastName, setLastName] = useState<string>('')
-  const [succesMessage, setSuccesMessage] = useState<string | null>(null)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [telegramID, setTelegramID] = useState<string>('')
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     const result = await saveData()
     if (result) {
-      setErrorMessage('')
-      setSuccesMessage('Data saved successfully!')
+      toast.success('Данные успешно сохранены!', {
+        position: 'top-center',
+        autoClose: 3000
+      })
       setTimeout(() => {
-        navigate('/home_admin') // Переход на главную страницу
-      }, 1500)
+        navigate('/accountant-telegramBot')
+      }, 2000)
     } else {
-      setErrorMessage('Error!')
+      toast.error('Ошибка сохранения данных!', {
+        position: 'top-center',
+        autoClose: 3000
+      })
     }
   }
 
@@ -34,7 +38,8 @@ const AditionalInfoForm: React.FC = () => {
         'http://localhost:5001/workers_crm/add_info',
         {
           firstName,
-          lastName
+          lastName,
+          telegramID
         },
         {
           headers: {
@@ -59,34 +64,46 @@ const AditionalInfoForm: React.FC = () => {
   return (
     <div className={`${generalStyles.body}`}>
       <div className={`${styles.container}`}>
-        <h2>Additional Information</h2>
+        <h2>Заполнение данных</h2>
         <form onSubmit={handleSubmit}>
+          <ToastContainer />
           <div>
-            <label htmlFor="firstName">First Name:</label>
+            <label htmlFor="firstName">Имя:</label>
             <input
               type="text"
               id="firstName"
               value={firstName}
               onChange={e => setFirstName(e.target.value)}
-              placeholder="Enter your first name"
+              placeholder="Введите имя"
               required
             />
           </div>
           <div>
-            <label htmlFor="lastName">Last Name:</label>
+            <label htmlFor="lastName">Фамилия:</label>
             <input
               type="text"
               id="lastName"
               value={lastName}
               onChange={e => setLastName(e.target.value)}
-              placeholder="Enter your last name"
+              placeholder="Введите фамилию"
               required
             />
           </div>
-          <button type="submit">Submit</button>
+          <div>
+            <label htmlFor="telegramID">Telegram:</label>
+            <input
+              type="text"
+              id="telegramID"
+              value={telegramID}
+              onChange={e => setTelegramID(e.target.value)}
+              placeholder="Введите telegram"
+              required
+            />
+          </div>
+          <button type="submit" className={styles.submit_button}>
+            Сохранить
+          </button>
         </form>
-        {succesMessage && <p className={styles.succes_message}>{succesMessage}</p>}
-        {errorMessage && <p className={styles.error_message}>{errorMessage}</p>}
       </div>
     </div>
   )

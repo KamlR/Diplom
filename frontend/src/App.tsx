@@ -5,6 +5,9 @@ import AuthorizationPage1 from './components/AuthorizationPage1'
 import AuthorizationPage2 from './components/AuthorizationPage2'
 import AditionalInfoForm from './components/AdditionalInfoForm'
 import HomeAdminPage from './components/admin/HomeAdmin'
+import HomeHRPage from './components/hr/HomeHr'
+import HomeAccountantPage from './components/accountant/HomeAccountant'
+import TelegamBot from './components/accountant/TelegramBot'
 
 const App: React.FC = () => {
   return (
@@ -13,8 +16,11 @@ const App: React.FC = () => {
         <Route path="/" element={<GreetinPage />} />
         <Route path="/authorization1" element={<AuthorizationPage1 />} />
         <Route path="/authorization2" element={<AuthorizationPage2 />} />
-        <Route path="/additional_info_form" element={<AditionalInfoForm />} />
-        <Route path="/home_admin" element={<HomeAdminPage />} />
+        <Route path="/additional-info-form" element={<AditionalInfoForm />} />
+        <Route path="/home-admin" element={<HomeAdminPage />} />
+        <Route path="/home-hr" element={<HomeHRPage />} />
+        <Route path="/home-accountant" element={<HomeAccountantPage />} />
+        <Route path="/accountant-telegramBot" element={<TelegamBot />} />
       </Routes>
     </Router>
   )

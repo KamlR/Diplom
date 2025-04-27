@@ -25,7 +25,6 @@ tokensController.get('/refresh', async (req: Request, res: Response) => {
     }
     const { walletAddress } = decoded
     const accessToken = jwt.sign({ walletAddress }, process.env.ACCESS_TOKEN_KEY, { expiresIn: '1h' })
-    console.log(accessToken)
     return res.status(200).json({ accessToken: accessToken })
   })
 })

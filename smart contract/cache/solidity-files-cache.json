@@ -1,10 +1,88 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "/Users/karinamavletova/Documents/uni/diplom/smart contract/contracts/CryptoPayments.sol": {
-      "lastModificationDate": 1742054091719,
-      "contentHash": "b6680746791c97a166e772dbb16ecb1b",
+    "/Users/karinamavletova/Documents/uni/diplom/code/smart contract/contracts/CryptoPayments.sol": {
+      "lastModificationDate": 1745251431837,
+      "contentHash": "fc73e493d21b2122b1a6784a0d8f28cf",
       "sourceName": "contracts/CryptoPayments.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "CryptoPayments",
+        "IEntryPoint"
+      ]
+    },
+    "/Users/karinamavletova/Documents/uni/diplom/code/smart contract/contracts/EntryPoint.sol": {
+      "lastModificationDate": 1745251423053,
+      "contentHash": "ac5e9574ac85da0e6e4a04a921da4bfe",
+      "sourceName": "contracts/EntryPoint.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "EntryPoint",
+        "IAccount"
+      ]
+    },
+    "/Users/karinamavletova/Documents/uni/diplom/code/smart contract/node_modules/hardhat/console.sol": {
+      "lastModificationDate": 1738341361730,
+      "contentHash": "681c532e816169606d13a5fe8b475074",
+      "sourceName": "hardhat/console.sol",
       "solcConfig": {
         "version": "0.8.20",
         "settings": {
@@ -31,10 +109,10 @@
       },
       "imports": [],
       "versionPragmas": [
-        "^0.8.20"
+        ">=0.4.22 <0.9.0"
       ],
       "artifacts": [
-        "CryptoPayments"
+        "console"
       ]
     }
   }

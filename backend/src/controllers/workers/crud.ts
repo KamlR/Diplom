@@ -4,6 +4,7 @@ import { validateAddEmployee, validateChangeEmployee, validateDeleteEmployee } f
 import { ObjectId } from 'mongodb'
 import AuthMiddleware from '../../tokens/AuthMiddleware'
 import Worker from '../..//models/worker'
+import fs from 'fs'
 
 const workersController = express.Router()
 
@@ -25,7 +26,15 @@ workersController.get('', AuthMiddleware.verifyToken, async (req: Request, res: 
           worker.department
         )
     )
-    res.status(200).json(workers)
+
+    // В params адрес кошелька сотрудника админки (он в AuthMiddleware записывается)
+    const answer = {
+      workers,
+      ...{
+        userOpDataAvailable: await checkAccountantSignStatus(req.params.walletAddress)
+      }
+    }
+    res.status(200).json(answer)
   } catch (error) {
     res.status(500).json({ error: 'Failed to get workers' })
   }
@@ -69,7 +78,6 @@ workersController.put('', AuthMiddleware.verifyToken, async (req: Request, res: 
   try {
     const db = await connectToDatabase()
     const workersCollection = db.collection('workers')
-    console.log(req.body)
     const result = await workersCollection.updateOne(
       { _id: new ObjectId(req.body.id) },
       {
@@ -83,7 +91,6 @@ workersController.put('', AuthMiddleware.verifyToken, async (req: Request, res: 
         }
       }
     )
-    console.log(result)
 
     res.status(200).json({ message: 'Worker updated successfully' })
   } catch (error: any) {
@@ -108,5 +115,19 @@ workersController.delete('/:id', AuthMiddleware.verifyToken, async (req: Request
     res.status(500).json({ error: 'Internal server error' })
   }
 })
+
+async function checkAccountantSignStatus(workerCrmWalletAddress: string) {
+  const fileName = './userOpData.json'
+  if (!fs.existsSync(fileName)) {
+    return false
+  }
+  const db = await connectToDatabase()
+  const accountsCollection = db.collection('accountants')
+  const user = await accountsCollection.findOne(
+    { walletAddress: workerCrmWalletAddress },
+    { projection: { signStatus: 1, _id: 0 } }
+  )
+  return !user?.signStatus
+}
 
 export default workersController

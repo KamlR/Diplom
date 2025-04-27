@@ -1,0 +1,98 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  flex-direction: column; 
+  background: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+  z-index: 999; /* Обеспечивает, что форма будет поверх контента */
+}
+
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 600px;
+  max-width: 100%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.3s ease-out;
+}
+
+.closeButtonDiv{
+  display: flex;
+  justify-content: right;
+  align-items: right;
+}
+.closeButton {
+  width: 30px;
+  height: 30px;
+  background-color: #dbdbdb;
+  color: #494747;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+}
+
+
+.closeButton:hover{
+  background-color: #555;
+  color: #ddd;
+}
+
+.address{
+  margin-top: 20px;
+}
+.money{
+  margin-top: 40px;
+}
+
+.inputAddress{
+  margin-top: 5px;
+  outline: none;
+  margin-bottom: 3px;
+}
+
+.example{
+  font-size: 13px
+}
+
+.sendMoneyButton{
+  background-color: #4A90E2; /* Голубой цвет */
+  color: white;
+  margin-top: 20px;
+  padding: 12px 24px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: auto;
+  transition: background-color 0.3s;
+}
+
+.sendMoneyButton:active {
+  transform: scale(0.95); 
+}
+
+.sendMoneyButton:hover{
+  background-color: #357ABD;
+}
+
+.sendMoneyButtonNotActive{
+  background-color: #b3c9e2; /* Голубой цвет */
+  color: white;
+  margin-top: 20px;
+  padding: 12px 24px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: auto;
+}

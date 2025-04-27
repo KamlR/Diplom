@@ -1,5 +1,4 @@
 import Ajv from 'ajv'
-import { format } from 'path'
 
 const ajv = new Ajv()
 

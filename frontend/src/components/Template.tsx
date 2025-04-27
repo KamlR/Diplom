@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const AuthorizationPage: React.FC = () => {
+const Temlate: React.FC = () => {
   return <div>.</div>
 }
-export default AuthorizationPage
+export default Temlate

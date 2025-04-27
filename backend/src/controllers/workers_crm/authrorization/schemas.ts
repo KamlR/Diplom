@@ -18,9 +18,10 @@ const addInfoSchema = {
   type: 'object',
   properties: {
     firstName: { type: 'string' },
-    lastName: { type: 'string' }
+    lastName: { type: 'string' },
+    telegramID: { type: 'string' }
   },
-  required: ['firstName', 'lastName']
+  required: ['firstName', 'lastName', 'telegramID']
 }
 
 export const validateAuthorization = ajv.compile(authorizationSchema)

@@ -1,37 +1,69 @@
 import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import styles from '../../style/GiveAccess.module.css'
+import styles from '../../style/admin/GiveAccess.module.css'
 import { ethers } from 'ethers'
 import abi from '../../abis/CryptoPayments.json'
+import { ToastContainer, toast } from 'react-toastify'
+import { formUserOperation } from '../../utils/shared'
 
 const GiveAccess: React.FC = () => {
   const [walletAddress, setWalletAddress] = useState('')
   const [role, setRole] = useState('')
-  const [toastMessage, setToastMessage] = useState('')
-  const [toastColor, setToastColor] = useState('#4caf50')
-  const [showToast, setShowToast] = useState(false)
+  const [error, setError] = useState('')
 
   // TODO: вынести подключение к смарт контракту
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
-    const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3'
-    const networkUrl = 'http://127.0.0.1:8545'
+    if (typeof window.ethereum == 'undefined') {
+      toast.error('MetaMask не установлен! Он нужен для подписи.', {
+        position: 'top-center',
+        autoClose: 3000
+      })
+      return
+    }
+    const { userOp, userOpHash } = formUserOperation(walletAddress, role)
+    const provider = new ethers.BrowserProvider(window.ethereum)
+    const signer = provider.getSigner()
+    const signature = await (await signer).signMessage(ethers.getBytes(userOpHash))
+    userOp.signature = signature
+
+    const result = await sendUserOperation(userOp)
+    if (result) {
+      toast.success('Доступ выдан!', {
+        position: 'top-center',
+        autoClose: 2000
+      })
+    } else {
+      toast.error('Ошибка в процессе выдачи доступа!', {
+        position: 'top-center',
+        autoClose: 3000
+      })
+    }
+  }
+
+  async function sendUserOperation(userOp: any): Promise<boolean> {
+    const entryPoint = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
     try {
-      const localProvider = new ethers.JsonRpcProvider(networkUrl)
-      const signer = await localProvider.getSigner()
-      const contract = new ethers.Contract(contractAddress, abi, signer)
-      const result = await contract.giveAccessToEmployee(walletAddress, role)
-      if (result) {
-        setToastColor('#4caf50')
-        setToastMessage('Успешно')
-        setShowToast(true)
+      const response = await axios.post(
+        'http://localhost:4337/send-user-operation',
+        {
+          userOp,
+          entryPoint
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      if (response.status == 200) {
+        return true
       }
     } catch (error) {
-      setToastMessage('❌ Ошибка!')
-      setToastColor('#E07E77FF')
-      setShowToast(true)
-      console.error('Ошибка при вызове контракта:', error)
+      return false
     }
+    return false
   }
   return (
     <div className={styles.accessForm}>
@@ -59,15 +91,11 @@ const GiveAccess: React.FC = () => {
             required
           />
         </div>
-        {showToast && (
-          <div className={styles.toast} style={{ backgroundColor: toastColor }}>
-            {toastMessage}
-          </div>
-        )}
         <button type="submit" className={styles.buttonSubmit}>
           Выдать доступ
         </button>
       </form>
+      <ToastContainer />
     </div>
   )
 }

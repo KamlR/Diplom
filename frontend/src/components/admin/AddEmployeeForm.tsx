@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { workWithTokens } from '../../utils/shared'
-import { Employee } from './HomeAdmin'
-import styles from '../../style/AddEmployeeForm.module.css'
+import { Employee } from '../../models/employee'
+import styles from '../../style/admin/AddEmployeeForm.module.css'
 
 interface AddEmployeeFormProps {
   onAddEmployee: (newEmployee: Employee) => void
@@ -89,14 +89,11 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
         return true
       }
     } catch (error: any) {
-      console.log(error)
       if (error?.response?.status === 401) {
         if (await workWithTokens(error, navigate)) {
           return await addEmployee()
         }
-        return false
       }
-      return false
     }
     return false
   }
@@ -118,9 +115,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
         if (await workWithTokens(error, navigate)) {
           return await changeEmployee()
         }
-        return false
       }
-      return false
     }
     return false
   }
@@ -128,12 +123,15 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
   async function deleteEmployee(): Promise<boolean> {
     try {
       const accessToken = localStorage.getItem('access_token')
-      const response = await axios.delete('http://localhost:5001/workers/' + employee.id, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`
-        },
-        params: { id: employee.id }
-      })
+      const response = await axios.delete(
+        'http://localhost:5001/workers/' + employee.id,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          },
+          params: { id: employee.id }
+        }
+      )
       if (response.status == 200) {
         return true
       }
@@ -191,27 +189,63 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
           <div className={styles.formGrid}>
             <div className={styles.inputGroup}>
               <label>Имя:</label>
-              <input type="text" name="firstName" value={employee.firstName} onChange={handleChange} required />
+              <input
+                type="text"
+                name="firstName"
+                value={employee.firstName}
+                onChange={handleChange}
+                required
+              />
             </div>
             <div className={styles.inputGroup}>
               <label>Фамилия:</label>
-              <input type="text" name="lastName" value={employee.lastName} onChange={handleChange} required />
+              <input
+                type="text"
+                name="lastName"
+                value={employee.lastName}
+                onChange={handleChange}
+                required
+              />
             </div>
             <div className={styles.inputGroup}>
               <label>Зарплата:</label>
-              <input type="number" name="salary" value={employee.salary} onChange={handleChange} required />
+              <input
+                type="number"
+                name="salary"
+                value={employee.salary}
+                onChange={handleChange}
+                required
+              />
             </div>
             <div className={styles.inputGroup}>
               <label>Адрес кошелька:</label>
-              <input type="text" name="walletAddress" value={employee.walletAddress} onChange={handleChange} required />
+              <input
+                type="text"
+                name="walletAddress"
+                value={employee.walletAddress}
+                onChange={handleChange}
+                required
+              />
             </div>
             <div className={styles.inputGroup}>
               <label>Должность:</label>
-              <input type="text" name="position" value={employee.position} onChange={handleChange} required />
+              <input
+                type="text"
+                name="position"
+                value={employee.position}
+                onChange={handleChange}
+                required
+              />
             </div>
             <div className={styles.inputGroup}>
               <label>Отдел:</label>
-              <input type="text" name="department" value={employee.department} onChange={handleChange} required />
+              <input
+                type="text"
+                name="department"
+                value={employee.department}
+                onChange={handleChange}
+                required
+              />
             </div>
           </div>
           {showToast && (

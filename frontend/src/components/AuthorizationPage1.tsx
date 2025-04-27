@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { ethers } from 'ethers'
 import abi from '../abis/CryptoPayments.json'
 
-import styles from '../style/AuthorizationPage1.module.css'
-import generalStyles from '../style/General.module.css'
+import styles from '../style/general/AuthorizationPage1.module.css'
+import generalStyles from '../style/general/General.module.css'
 
 declare global {
   interface Window {
@@ -24,6 +24,7 @@ const AuthorizationPage1: React.FC = () => {
         let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
 
         const resultAccess = await checkAccess(accounts[0])
+
         if (resultAccess) {
           setWalletAddress(accounts[0])
           localStorage.setItem('walletAddress', accounts[0])
@@ -62,7 +63,11 @@ const AuthorizationPage1: React.FC = () => {
         <div className={`${styles.title}`}>Step 1</div>
         {walletAddress ? (
           <div className={`${styles.walletAddress}`}>
-            <div>✅Your wallet address: {walletAddress}</div>
+            <div>
+              <div>
+                <h3>Your wallet address:</h3> {walletAddress}
+              </div>
+            </div>
             <button onClick={handlerNextStep} className={`${styles.nextButton}`}>
               Next
             </button>

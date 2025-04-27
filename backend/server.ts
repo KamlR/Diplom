@@ -3,6 +3,10 @@ import { logger } from './src/logger'
 import authorizationController from './src/controllers/workers_crm/authrorization/authorization'
 import tokensController from './src/tokens/tokensApi'
 import workersController from './src/controllers/workers/crud'
+import salaryController from './src/controllers/salary/salaryPaymentProcess'
+//import './src/controllers/salary/cronTasks'
+import './src/controllers/salary/telegram'
+
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
 
@@ -27,6 +31,7 @@ app.use((req, res, next) => {
 app.use('/workers_crm', authorizationController)
 app.use('/tokens', tokensController)
 app.use('/workers', workersController)
+app.use('/salary', salaryController)
 const port = 5001
 
 app.listen(port, () => {

@@ -1,0 +1,66 @@
+
+.title{
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+
+
+.refreshButton{
+  background-color: #4A90E2; 
+  color: white;
+  margin-top: 30px;
+  padding: 8px;
+  border-radius: 8px;
+  border: solid 1px white;
+}
+
+.refreshButton:hover {
+  background-color: #357ABD;
+}
+.refreshButton:active {
+  transform: scale(0.96); 
+}
+
+.addToBalance{
+  background-color: white; 
+  color: #4A90E2;
+  margin-top: 30px;
+  margin-left: 15px;
+  padding: 8px;
+  border-radius: 8px;
+  border: solid 1px #4A90E2;
+}
+
+
+.addToBalance:active {
+  transform: scale(0.96); 
+  background-color: #f0f7ff; 
+  border-color: #3a7bc8; 
+}
+
+
+.addToBalance:hover{
+  background-color: #f0f7ff; 
+}
+
+
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border-left-color: #09f;
+  animation: spin 1s ease infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.errorMessage{
+  color: rgb(225, 90, 80)
+}

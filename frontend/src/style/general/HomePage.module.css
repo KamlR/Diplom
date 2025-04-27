@@ -27,7 +27,7 @@
 
 .sidebar button {
   color: white;
-  text-decoration: none;
+  border: 2px solid rgb(33, 32, 32);
   font-size: 18px;
   display: block; /* Ссылка становится блочным элементом */
   padding: 10px;
@@ -36,9 +36,14 @@
   width: 100%; /* Задаем ширину 100% от родительского элемента */
   text-align: center; /* Центрируем текст */
   background-color: #444;
-  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
+.sidebar button:active {
+  transform: scale(0.95); 
+}
+.sidebar button:hover {
+  background-color: #292929;
+}
 .sidebar a:hover {
   background-color: #555;
   transform: translateY(-2px);
@@ -93,6 +98,7 @@
   font-size: 16px;
   margin-top: 20px;
   font-weight: bold;
+  text-align: center;
   animation: fadeIn 0.5s ease-out;
 }
 
