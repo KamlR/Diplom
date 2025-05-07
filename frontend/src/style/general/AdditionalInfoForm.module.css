@@ -49,6 +49,7 @@ input {
   box-sizing: border-box; /* Учитываем padding в ширину */
 }
 
+
 .success_message{
   font-size: 1.3rem;
   color: rgb(2, 130, 72); /* Меньше агрессивный красный */
@@ -79,6 +80,18 @@ input {
   padding: 10px;
   margin-top: 30px;
   background-color: #3593d7;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.sendMoneyButtonNotActive{
+  width: 100%;
+  padding: 10px;
+  margin-top: 30px;
+  background-color: #a6c8ef;
   color: white;
   border: none;
   border-radius: 5px;

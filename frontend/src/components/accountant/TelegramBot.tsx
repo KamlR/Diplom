@@ -42,7 +42,7 @@ const TelegamBot: React.FC = () => {
           case 'accountant':
             navigate('/home-accountant')
         }
-      }, 10000)
+      }, 1000)
     } else {
       setShowErrorToast(true)
     }
@@ -51,12 +51,15 @@ const TelegamBot: React.FC = () => {
   async function getInfoAboutTelegramBotConnection(): Promise<string | null> {
     const accessToken = localStorage.getItem('access_token')
     try {
-      const response = await axios.get('http://localhost:5001/workers_crm/check-telegrambot-connection', {
-        withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${accessToken}`
+      const response = await axios.get(
+        'http://localhost:5001/workers_crm/check-telegrambot-connection',
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
         }
-      })
+      )
       if (response.status == 200) {
         return response.data.chatID
       }
@@ -74,7 +77,9 @@ const TelegamBot: React.FC = () => {
     <div className={generalStyles.body}>
       <div className={styles.telegram_guide_block}>
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown>
-        {!showSuccessToast && !showErrorToast && <b>Проверьте, что уведомления настроены ⬇</b>}
+        {!showSuccessToast && !showErrorToast && (
+          <b>Проверьте, что уведомления настроены ⬇</b>
+        )}
         {loading && <div className={styles.spinner}></div>}
         {showSuccessToast && <div className={styles.success_toast}>{successToast}</div>}
         {showErrorToast && <div className={styles.erorr_toast}>{errorToast}</div>}

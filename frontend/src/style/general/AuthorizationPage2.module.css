@@ -57,3 +57,11 @@
 
   box-shadow: 0 0 15px rgba(246, 173, 38, 0.7), 0 0 30px rgba(246, 173, 38, 0.3);
 }
+
+.connectButton:active {
+  transform: scale(0.95); 
+}
+
+.connectButton:hover{
+  background-color: #42779e;
+}

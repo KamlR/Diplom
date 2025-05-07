@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import { workWithTokens } from '../../utils/shared'
+import { workWithTokens, checkData } from '../../utils/shared'
 import { Employee } from '../../models/employee'
 import styles from '../../style/admin/AddEmployeeForm.module.css'
+import { ToastContainer, toast } from 'react-toastify'
 
 interface AddEmployeeFormProps {
   onAddEmployee: (newEmployee: Employee) => void
@@ -31,12 +32,20 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
   const [rightButtonText, setRightButtonText] = useState('')
   const [title, setTitle] = useState('')
   const [employee, setEmployee] = useState<Employee>(employeeFromHome)
-
+  const [validData, setValidData] = useState(true)
+  const [borderWalletAddressStyle, setBorderWalletAddressStyle] =
+    useState<React.CSSProperties>({
+      border: '1px solid #dddddd'
+    })
+  const [saveButtonStyle, setSaveButtonStyle] = useState<React.CSSProperties>({
+    backgroundColor: '#b3c9e2'
+  })
   useEffect(() => {
     if (mode == 'add') {
       setTitle('Добавление сотрудника')
       setRightButtonText('Добавить')
     } else if (mode == 'change') {
+      setSaveButtonStyle({ backgroundColor: '#4A90E2' })
       setTitle('Редактирование сотрудника')
       setRightButtonText('Сохранить')
       setLeftButtonText('Удалить')
@@ -45,15 +54,33 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-
     setEmployee(prev => ({
       ...prev,
       [name]: name === 'salary' ? Number(value) : value
     }))
+
+    if (name == 'walletAddress') {
+      const regex = /^0x[a-fA-F0-9]{40}$/
+      checkData(
+        value,
+        regex,
+        'employee',
+        setValidData,
+        setBorderWalletAddressStyle,
+        setSaveButtonStyle
+      )
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!validData) {
+      toast.error('Ошибка в данных сотрудника!', {
+        position: 'top-center',
+        autoClose: 2000
+      })
+      return
+    }
     let result
     if (mode == 'add') {
       result = await addEmployee()
@@ -156,7 +183,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
       setTimeout(() => {
         setShowToast(false)
         resolve()
-      }, 4000)
+      }, 2000)
     })
     if (mode == 'add') {
       onAddEmployee(employee)
@@ -171,7 +198,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
     setShowToast(true)
     setTimeout(() => {
       setShowToast(false)
-    }, 5000)
+    }, 2000)
   }
   return (
     <div className={styles.overlay}>
@@ -194,6 +221,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
                 name="firstName"
                 value={employee.firstName}
                 onChange={handleChange}
+                maxLength={35}
                 required
               />
             </div>
@@ -204,6 +232,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
                 name="lastName"
                 value={employee.lastName}
                 onChange={handleChange}
+                maxLength={35}
                 required
               />
             </div>
@@ -214,6 +243,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
                 name="salary"
                 value={employee.salary}
                 onChange={handleChange}
+                maxLength={35}
                 required
               />
             </div>
@@ -224,6 +254,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
                 name="walletAddress"
                 value={employee.walletAddress}
                 onChange={handleChange}
+                style={borderWalletAddressStyle}
                 required
               />
             </div>
@@ -234,6 +265,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
                 name="position"
                 value={employee.position}
                 onChange={handleChange}
+                maxLength={35}
                 required
               />
             </div>
@@ -244,6 +276,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
                 name="department"
                 value={employee.department}
                 onChange={handleChange}
+                maxLength={35}
                 required
               />
             </div>
@@ -259,11 +292,12 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
                 {leftButtonText}
               </button>
             )}
-            <button type="submit" className={styles.rightButton}>
+            <button type="submit" className={styles.rightButton} style={saveButtonStyle}>
               {rightButtonText}
             </button>
           </div>
         </form>
+        <ToastContainer />
       </div>
     </div>
   )

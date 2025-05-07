@@ -12,8 +12,15 @@ const AditionalInfoForm: React.FC = () => {
   const [firstName, setFirstName] = useState<string>('')
   const [lastName, setLastName] = useState<string>('')
   const [telegramID, setTelegramID] = useState<string>('')
+  const [validData, setValidData] = useState(false)
+  const [borderTelegramStyle, setBorderTelegramStyle] = useState<React.CSSProperties>({
+    border: '1px solid #cccccc'
+  })
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
+    if (!validData) {
+      return
+    }
     const result = await saveData()
     if (result) {
       toast.success('Данные успешно сохранены!', {
@@ -28,6 +35,25 @@ const AditionalInfoForm: React.FC = () => {
         position: 'top-center',
         autoClose: 3000
       })
+    }
+  }
+
+  const onChangeTelegramID = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setTelegramID(value)
+    if (value == '') {
+      setValidData(false)
+      setBorderTelegramStyle({ border: '1px solid #cccccc' })
+      return
+    }
+    const regex = /^[A-Za-z][A-Za-z0-9_]{3,30}[A-Za-z0-9]$/
+    const isValid = regex.test(value)
+    if (!isValid) {
+      setValidData(false)
+      setBorderTelegramStyle({ border: '2px solid rgb(226, 68, 56)', outline: 'none' })
+    } else {
+      setValidData(true)
+      setBorderTelegramStyle({ border: '1px solid #cccccc' })
     }
   }
 
@@ -75,6 +101,7 @@ const AditionalInfoForm: React.FC = () => {
               value={firstName}
               onChange={e => setFirstName(e.target.value)}
               placeholder="Введите имя"
+              maxLength={35}
               required
             />
           </div>
@@ -86,23 +113,30 @@ const AditionalInfoForm: React.FC = () => {
               value={lastName}
               onChange={e => setLastName(e.target.value)}
               placeholder="Введите фамилию"
+              maxLength={35}
               required
             />
           </div>
           <div>
-            <label htmlFor="telegramID">Telegram:</label>
+            <label htmlFor="telegramID">Telegram (без @):</label>
             <input
               type="text"
               id="telegramID"
               value={telegramID}
-              onChange={e => setTelegramID(e.target.value)}
+              onChange={onChangeTelegramID}
               placeholder="Введите telegram"
+              maxLength={35}
+              style={borderTelegramStyle}
               required
             />
           </div>
-          <button type="submit" className={styles.submit_button}>
-            Сохранить
-          </button>
+          {validData ? (
+            <button type="submit" className={styles.submit_button}>
+              Сохранить
+            </button>
+          ) : (
+            <button className={styles.sendMoneyButtonNotActive}>Сохранить</button>
+          )}
         </form>
       </div>
     </div>

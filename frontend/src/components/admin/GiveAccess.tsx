@@ -1,20 +1,32 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
 import styles from '../../style/admin/GiveAccess.module.css'
 import { ethers } from 'ethers'
-import abi from '../../abis/CryptoPayments.json'
 import { ToastContainer, toast } from 'react-toastify'
-import { formUserOperation } from '../../utils/shared'
+import { formUserOperation, checkData } from '../../utils/shared'
 
 const GiveAccess: React.FC = () => {
-  const [walletAddress, setWalletAddress] = useState('')
-  const [role, setRole] = useState('')
-  const [error, setError] = useState('')
+  const [borderAddressStyle, setBorderAddressStyle] = useState<React.CSSProperties>({
+    border: '1px solid #dddddd'
+  })
+  const [borderRoleStyle, setBorderRoleStyle] = useState<React.CSSProperties>({
+    border: '1px solid #dddddd'
+  })
+  const [walletAddress, setWalletAddress] = useState<string>('')
+  const [role, setRole] = useState<string>('')
+  const [validAddress, setValidAddress] = useState<boolean>(false)
+  const [validRole, setValidRole] = useState<boolean>(false)
 
   // TODO: вынести подключение к смарт контракту
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
+    if (!validAddress || !validRole) {
+      toast.error('Ошибка в данных для выдачи!', {
+        position: 'top-center',
+        autoClose: 2000
+      })
+      return
+    }
     if (typeof window.ethereum == 'undefined') {
       toast.error('MetaMask не установлен! Он нужен для подписи.', {
         position: 'top-center',
@@ -40,6 +52,20 @@ const GiveAccess: React.FC = () => {
         autoClose: 3000
       })
     }
+  }
+
+  const onChangeWalletAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setWalletAddress(value)
+    const regex = /^0x[a-fA-F0-9]{40}$/
+    checkData(value, regex, 'give_access', setValidAddress, setBorderAddressStyle)
+  }
+
+  const onChangeRole = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setRole(value)
+    const regex = /^(admin|accountant|hr)$/
+    checkData(value, regex, 'give_access', setValidRole, setBorderRoleStyle)
   }
 
   async function sendUserOperation(userOp: any): Promise<boolean> {
@@ -75,8 +101,9 @@ const GiveAccess: React.FC = () => {
             type="text"
             id="walletAddress"
             value={walletAddress}
-            onChange={e => setWalletAddress(e.target.value)}
+            onChange={onChangeWalletAddress}
             placeholder="Введите адрес кошелька"
+            style={borderAddressStyle}
             required
           />
         </div>
@@ -86,8 +113,9 @@ const GiveAccess: React.FC = () => {
             type="text"
             id="role"
             value={role}
-            onChange={e => setRole(e.target.value)}
+            onChange={onChangeRole}
             placeholder="Введите роль"
+            style={borderRoleStyle}
             required
           />
         </div>

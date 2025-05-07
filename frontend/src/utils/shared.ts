@@ -2,7 +2,6 @@ import axios from 'axios'
 import { NavigateFunction } from 'react-router-dom'
 import { ethers } from 'ethers'
 import { keccak256, AbiCoder } from 'ethers'
-import { BytesLike } from 'ethers'
 
 export async function workWithTokens(error: any, navigate: NavigateFunction) {
   if (error.response.data.error === 'The authorization token is invalid') {
@@ -52,7 +51,9 @@ export async function getRole(navigate: NavigateFunction): Promise<string | null
 
 export function formUserOperation(walletAddress: string, role: string): any {
   const giveAccessToEmployeeFunctionSignature = 'giveAccessToEmployee(address,string)'
-  const iface = new ethers.Interface([`function ${giveAccessToEmployeeFunctionSignature}`])
+  const iface = new ethers.Interface([
+    `function ${giveAccessToEmployeeFunctionSignature}`
+  ])
   const callData = iface.encodeFunctionData('giveAccessToEmployee', [walletAddress, role])
   const userOp = {
     sender: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
@@ -73,7 +74,18 @@ export function formUserOperation(walletAddress: string, role: string): any {
   const abi = AbiCoder.defaultAbiCoder()
   const userOpPackHash = keccak256(
     abi.encode(
-      ['address', 'uint256', 'bytes32', 'bytes32', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'bytes32'],
+      [
+        'address',
+        'uint256',
+        'bytes32',
+        'bytes32',
+        'uint256',
+        'uint256',
+        'uint256',
+        'uint256',
+        'uint256',
+        'bytes32'
+      ],
       [
         userOp.sender,
         userOp.nonce,
@@ -90,8 +102,48 @@ export function formUserOperation(walletAddress: string, role: string): any {
   )
 
   const finalHash = keccak256(
-    abi.encode(['bytes32', 'address', 'uint256'], [userOpPackHash, entryPointAddress, chainId])
+    abi.encode(
+      ['bytes32', 'address', 'uint256'],
+      [userOpPackHash, entryPointAddress, chainId]
+    )
   )
 
   return { userOp, userOpHash: finalHash }
+}
+
+export function checkData(
+  value: string,
+  regex: RegExp,
+  type: string,
+  setValidData: (valid: boolean) => void,
+  setBorderStyle: (style: React.CSSProperties) => void,
+  setButtonStyle: (style: React.CSSProperties) => void = () => {}
+) {
+  if (value == '') {
+    setValidData(false)
+    setNeutralBorderColor(type, setBorderStyle)
+    setButtonStyle({ backgroundColor: '#b3c9e2' })
+    return
+  }
+  const isValid = regex.test(value)
+  if (!isValid) {
+    setValidData(false)
+    setBorderStyle({ border: '2px solid rgb(226, 68, 56)' })
+    setButtonStyle({ backgroundColor: '#b3c9e2' })
+  } else {
+    setValidData(true)
+    setNeutralBorderColor(type, setBorderStyle)
+    setButtonStyle({ backgroundColor: '#4A90E2' })
+  }
+}
+
+function setNeutralBorderColor(
+  type: string,
+  setBorderStyle: (style: React.CSSProperties) => void
+) {
+  if (type == 'give_access' || type == 'employee') {
+    setBorderStyle({ border: '1px solid #dddddd' })
+  } else {
+    setBorderStyle({ border: '2px solid #4A90E2' })
+  }
 }

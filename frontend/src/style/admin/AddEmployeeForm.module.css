@@ -55,9 +55,7 @@ h2 {
   transition: border 0.3s;
 }
 
-.inputGroup input:focus {
-  border-color: #4CAF50;
-}
+
 
 .buttonsWrapper {
   display: flex;

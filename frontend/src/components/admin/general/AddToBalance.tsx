@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styles from '../../../style/admin/AddToBalance.module.css'
 import { ToastContainer, toast } from 'react-toastify'
 import { ethers } from 'ethers'
+import { checkData } from '../../../utils/shared'
 
 interface AddToBalance {
   onClose: () => void
@@ -23,38 +24,14 @@ const AddToBalance: React.FC<AddToBalance> = ({ onClose, receiver, receiverAddre
   const handleInputAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setWalletAddress(value)
-    if (value == '') {
-      setValidAddress(false)
-      setBorderAddressStyle({ border: '2px solid #4A90E2' })
-      return
-    }
-    const isValid = /^0x[a-fA-F0-9]{40}$/.test(value)
-    if (isValid) {
-      setValidAddress(true)
-      setBorderAddressStyle({ border: '2px solid #4CAF50' })
-    } else {
-      setValidAddress(false)
-      setBorderAddressStyle({ border: '2px solid rgb(226, 68, 56)' })
-    }
+    const regex = /^0x[a-fA-F0-9]{40}$/
+    checkData(value, regex, '', setValidAddress, setBorderAddressStyle)
   }
   const handleInputMoneyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setMoney(value)
-    if (value == '') {
-      setValidMoney(false)
-      setBorderMoneyStyle({ border: '2px solid #4A90E2' })
-      return
-    }
-    const numericValue = parseFloat(value)
-    const isValidNumber = !isNaN(numericValue) && numericValue >= 0 && /^\d*\.?\d*$/.test(value)
-
-    if (isValidNumber) {
-      setValidMoney(true)
-      setBorderMoneyStyle({ border: '2px solid #4CAF50' })
-    } else {
-      setValidMoney(false)
-      setBorderMoneyStyle({ border: '2px solid rgb(226, 68, 56)' })
-    }
+    const regex = /^(?:0|[1-9]\d*)(?:\.\d+)?$/
+    checkData(value, regex, '', setValidMoney, setBorderMoneyStyle)
   }
 
   async function onClickSendMoney() {

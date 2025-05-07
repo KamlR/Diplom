@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/karinamavletova/Documents/uni/diplom/code/smart contract/contracts/CryptoPayments.sol": {
-      "lastModificationDate": 1745251431837,
-      "contentHash": "fc73e493d21b2122b1a6784a0d8f28cf",
+      "lastModificationDate": 1745773326785,
+      "contentHash": "d68115694fa5c2c9111a4dc11241d05f",
       "sourceName": "contracts/CryptoPayments.sol",
       "solcConfig": {
         "version": "0.8.20",
