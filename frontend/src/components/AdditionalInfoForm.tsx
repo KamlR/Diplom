@@ -3,6 +3,7 @@ import axios from 'axios'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { workWithTokens } from '../utils/shared'
+import { checkData } from '../utils/regexValidation'
 import { ToastContainer, toast } from 'react-toastify'
 import styles from '../style/general/AdditionalInfoForm.module.css'
 import generalStyles from '../style/general/General.module.css'
@@ -19,6 +20,10 @@ const AditionalInfoForm: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     if (!validData) {
+      toast.error('Ошибка в telegram!', {
+        position: 'top-center',
+        autoClose: 2000
+      })
       return
     }
     const result = await saveData()
@@ -41,20 +46,8 @@ const AditionalInfoForm: React.FC = () => {
   const onChangeTelegramID = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setTelegramID(value)
-    if (value == '') {
-      setValidData(false)
-      setBorderTelegramStyle({ border: '1px solid #cccccc' })
-      return
-    }
     const regex = /^[A-Za-z][A-Za-z0-9_]{3,30}[A-Za-z0-9]$/
-    const isValid = regex.test(value)
-    if (!isValid) {
-      setValidData(false)
-      setBorderTelegramStyle({ border: '2px solid rgb(226, 68, 56)', outline: 'none' })
-    } else {
-      setValidData(true)
-      setBorderTelegramStyle({ border: '1px solid #cccccc' })
-    }
+    checkData(value, regex, 'employee', setValidData, setBorderTelegramStyle)
   }
 
   async function saveData(): Promise<boolean> {

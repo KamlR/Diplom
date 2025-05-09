@@ -20,24 +20,28 @@ const AuthorizationPage1: React.FC = () => {
 
   const handlerConnectToMetamask = async () => {
     if (typeof window.ethereum !== 'undefined') {
+      setErrorMessage('')
       try {
-        let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
-
-        const resultAccess = await checkAccess(accounts[0])
-
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
+        let resultAccess
+        try {
+          resultAccess = await checkAccess(accounts[0])
+        } catch (error: any) {
+          setErrorMessage('Ошибка в процессе проверки доступа к системе!')
+          return
+        }
         if (resultAccess) {
           setWalletAddress(accounts[0])
           localStorage.setItem('walletAddress', accounts[0])
           setErrorMessage(null)
         } else {
-          setErrorMessage('You have no access to crypto payments')
+          setErrorMessage('У вас нет доступа к системе!')
         }
       } catch (error) {
-        console.error(error)
-        setErrorMessage('Something went wrong!')
+        setErrorMessage('Ошибка в процессе получения адреса!')
       }
     } else {
-      setErrorMessage('Please install Metamask')
+      setErrorMessage('Установите MetaMask')
     }
   }
 
@@ -73,7 +77,10 @@ const AuthorizationPage1: React.FC = () => {
             </button>
           </div>
         ) : (
-          <button onClick={handlerConnectToMetamask} className={`${styles.connectButton}`}>
+          <button
+            onClick={handlerConnectToMetamask}
+            className={`${styles.connectButton}`}
+          >
             Get wallet address from MetaMask
           </button>
         )}

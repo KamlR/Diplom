@@ -14,6 +14,9 @@
 }
 
 .formContainer {
+  display: flex;
+  flex-direction: column;
+
   background-color: white;
   padding: 20px;
   border-radius: 12px;
@@ -23,54 +26,11 @@
   animation: slideUp 0.3s ease-out;
 }
 
-h2 {
-  text-align: center;
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-.formGrid {
-  display: grid;
-  margin-top: 30px;
-  grid-template-columns: 1fr 1fr; /* Сетка с двумя колонками */
-  gap: 20px;
-}
-
-.inputGroup {
+.calendarDiv{
   display: flex;
   flex-direction: column;
-}
-
-.inputGroup label {
-  font-weight: bold;
-  margin-bottom: 8px;
-}
-
-.inputGroup input {
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-  font-size: 14px;
-  outline: none;
-  transition: border 0.3s;
-}
-.inputGroup input:invalid {
-  border: 2px solid rgb(226, 68, 56);
-}
-
-.form:invalid button[type="submit"] {
-  background-color: #b3c9e2
-}
-
-.form:valid button[type="submit"] {
-  background-color: #4A90E2
-}
-
-.buttonsWrapper {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-  gap: 30px; /* Увеличиваем расстояние между кнопками */
+  justify-content: center;
+  align-items: center;
 }
 
 .closeButtonDiv{
@@ -95,21 +55,29 @@ h2 {
   color: #ddd;
 }
 
-.saveButton {
-  flex: 1;
-  padding: 12px 24px;
-  border-radius: 6px;
+.title{
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 30px;
+  font-weight: bold;
+}
+
+.saveButton{
   background-color: #4A90E2; /* Голубой цвет */
   color: white;
+  margin-top: 20px;
+  padding: 12px;
+  border-radius: 6px;
   border: none;
   cursor: pointer;
   font-size: 16px;
-}
-
-.saveButton:hover {
-  background-color: #357ABD; 
+  margin-left: auto;
+  transition: background-color 0.3s;
 }
 .saveButton:active {
-  transform: scale(0.96); 
+  transform: scale(0.95); 
+}
 
+.saveButton:hover{
+  background-color: #357ABD;
 }

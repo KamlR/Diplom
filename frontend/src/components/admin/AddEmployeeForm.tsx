@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import { workWithTokens, checkData } from '../../utils/shared'
+import { workWithTokens } from '../../utils/shared'
+import { checkData } from '../../utils/regexValidation'
 import { Employee } from '../../models/employee'
 import styles from '../../style/admin/AddEmployeeForm.module.css'
 import { ToastContainer, toast } from 'react-toastify'
@@ -33,10 +34,9 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
   const [title, setTitle] = useState('')
   const [employee, setEmployee] = useState<Employee>(employeeFromHome)
   const [validData, setValidData] = useState(true)
-  const [borderWalletAddressStyle, setBorderWalletAddressStyle] =
-    useState<React.CSSProperties>({
-      border: '1px solid #dddddd'
-    })
+  const [borderWalletAddressStyle, setBorderWalletAddressStyle] = useState<React.CSSProperties>({
+    border: '1px solid #dddddd'
+  })
   const [saveButtonStyle, setSaveButtonStyle] = useState<React.CSSProperties>({
     backgroundColor: '#b3c9e2'
   })
@@ -54,28 +54,38 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setEmployee(prev => ({
-      ...prev,
-      [name]: name === 'salary' ? Number(value) : value
-    }))
+    const updatedEmployee = {
+      ...employee,
+      [name]: value
+    }
 
+    setEmployee(updatedEmployee)
+    console.log(employee)
     if (name == 'walletAddress') {
       const regex = /^0x[a-fA-F0-9]{40}$/
-      checkData(
-        value,
-        regex,
-        'employee',
-        setValidData,
-        setBorderWalletAddressStyle,
-        setSaveButtonStyle
-      )
+      checkData(value, regex, 'employee', setValidData, setBorderWalletAddressStyle)
     }
+    if (validData && checkFieldsForEmpty(updatedEmployee)) {
+      setSaveButtonStyle({ backgroundColor: '#4A90E2' })
+    } else {
+      setSaveButtonStyle({ backgroundColor: '#b3c9e2' })
+    }
+  }
+
+  function checkFieldsForEmpty(employee: Employee): boolean {
+    return (Object.keys(employee) as (keyof Employee)[]).every(key => {
+      if (key == 'id') {
+        return true
+      }
+      const value = employee[key]
+      return value !== ''
+    })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!validData) {
-      toast.error('Ошибка в данных сотрудника!', {
+      toast.error('Ошибка в адресе кошелька!', {
         position: 'top-center',
         autoClose: 2000
       })
@@ -107,7 +117,11 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
   async function addEmployee(): Promise<boolean> {
     try {
       const accessToken = localStorage.getItem('access_token')
-      const response = await axios.post('http://localhost:5001/workers', employee, {
+      const employeeToSend = {
+        ...employee,
+        salary: Number(employee.salary)
+      }
+      const response = await axios.post('http://localhost:5001/workers', employeeToSend, {
         headers: {
           Authorization: `Bearer ${accessToken}`
         }
@@ -128,7 +142,11 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
   async function changeEmployee(): Promise<boolean> {
     try {
       const accessToken = localStorage.getItem('access_token')
-      const response = await axios.put('http://localhost:5001/workers', employee, {
+      const employeeToSend = {
+        ...employee,
+        salary: Number(employee.salary)
+      }
+      const response = await axios.put('http://localhost:5001/workers', employeeToSend, {
         headers: {
           Authorization: `Bearer ${accessToken}`
         }
@@ -150,15 +168,12 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
   async function deleteEmployee(): Promise<boolean> {
     try {
       const accessToken = localStorage.getItem('access_token')
-      const response = await axios.delete(
-        'http://localhost:5001/workers/' + employee.id,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          },
-          params: { id: employee.id }
-        }
-      )
+      const response = await axios.delete('http://localhost:5001/workers/' + employee.id, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        },
+        params: { id: employee.id }
+      })
       if (response.status == 200) {
         return true
       }

@@ -3,7 +3,8 @@ import axios from 'axios'
 import styles from '../../style/admin/GiveAccess.module.css'
 import { ethers } from 'ethers'
 import { ToastContainer, toast } from 'react-toastify'
-import { formUserOperation, checkData } from '../../utils/shared'
+import { checkData } from '../../utils/regexValidation'
+import { formUserOperation } from '../../utils/accountAbstraction'
 
 const GiveAccess: React.FC = () => {
   const [borderAddressStyle, setBorderAddressStyle] = useState<React.CSSProperties>({
@@ -35,10 +36,18 @@ const GiveAccess: React.FC = () => {
       return
     }
     const { userOp, userOpHash } = formUserOperation(walletAddress, role)
-    const provider = new ethers.BrowserProvider(window.ethereum)
-    const signer = provider.getSigner()
-    const signature = await (await signer).signMessage(ethers.getBytes(userOpHash))
-    userOp.signature = signature
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum)
+      const signer = provider.getSigner()
+      const signature = await (await signer).signMessage(ethers.getBytes(userOpHash))
+      userOp.signature = signature
+    } catch (error: any) {
+      toast.error('Ошибка в процессе работы с MetaMask!', {
+        position: 'top-center',
+        autoClose: 3000
+      })
+      return
+    }
 
     const result = await sendUserOperation(userOp)
     if (result) {

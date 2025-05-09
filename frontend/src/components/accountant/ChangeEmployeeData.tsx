@@ -40,13 +40,17 @@ const ChangeEmployeeData: React.FC<ChangeEmployeeDataProps> = ({
 
     setEmployee(prev => ({
       ...prev,
-      [name]: name === 'salary' ? Number(value) : value
+      [name]: value
     }))
   }
   async function changeEmployee(): Promise<boolean> {
     try {
       const accessToken = localStorage.getItem('access_token')
-      const response = await axios.put('http://localhost:5001/workers', employee, {
+      const employeeToSend = {
+        ...employee,
+        salary: Number(employee.salary)
+      }
+      const response = await axios.put('http://localhost:5001/workers', employeeToSend, {
         headers: {
           Authorization: `Bearer ${accessToken}`
         }
@@ -76,7 +80,7 @@ const ChangeEmployeeData: React.FC<ChangeEmployeeDataProps> = ({
           <h2>Данные сотрудника</h2>
         </div>
         <ToastContainer />
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.formGrid}>
             <div className={styles.inputGroup}>
               <label>Имя:</label>
@@ -113,6 +117,7 @@ const ChangeEmployeeData: React.FC<ChangeEmployeeDataProps> = ({
               <input
                 type="text"
                 name="walletAddress"
+                pattern="^0x[a-fA-F0-9]{40}$"
                 value={employee.walletAddress}
                 onChange={handleChange}
                 required

@@ -1,17 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { workWithTokens } from '../../utils/shared'
-import Calendar from 'react-calendar'
+
+import CalendarForm from './CalendarForm'
+
 import styles from '../../style/general/SalaryDate.module.css'
 
-import CalendarWithTime from './CalendarWithTime'
 const SalaryDate: React.FC = () => {
   const navigate = useNavigate()
-  const [salaryDate, setSalaryDate] = useState<string>('')
+  const [salaryDate, setSalaryDate] = useState<Date | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [openCalendar, setOpenCalendar] = useState<boolean>(false)
+
   useEffect(() => {
     const dateHandler = async () => {
       await getCurrentSalaryDate()
@@ -21,6 +23,10 @@ const SalaryDate: React.FC = () => {
 
   const onClickCalendar = async () => {
     setOpenCalendar(true)
+  }
+
+  const closeCalendar = () => {
+    setOpenCalendar(false)
   }
 
   async function getCurrentSalaryDate() {
@@ -35,7 +41,7 @@ const SalaryDate: React.FC = () => {
         }
       })
       if (response.status == 200) {
-        setSalaryDate(response.data.date)
+        setSalaryDate(new Date(response.data.date))
       }
     } catch (error: any) {
       if (error?.response?.status === 401) {
@@ -56,14 +62,22 @@ const SalaryDate: React.FC = () => {
         <div className={styles.spinner}></div>
       ) : (
         <>
-          <b>Дата: </b>
-          {salaryDate}
+          <b>Дата:</b>{' '}
+          {salaryDate
+            ? salaryDate.toLocaleString('ru-RU', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })
+            : 'не выбрано'}
           <br />
           <b className={styles.errorMessage}>{errorMessage}</b>
         </>
       )}
 
-      {openCalendar && <Calendar />}
+      {openCalendar && <CalendarForm onCloseCalendar={closeCalendar} salaryDate={salaryDate} />}
       <div>
         <button onClick={getCurrentSalaryDate} className={styles.refreshButton}>
           Обновить данные

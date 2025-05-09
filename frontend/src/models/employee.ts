@@ -2,7 +2,7 @@ export interface Employee {
   id: string
   firstName: string
   lastName: string
-  salary: number
+  salary: string
   walletAddress: string
   position: string
   department: string

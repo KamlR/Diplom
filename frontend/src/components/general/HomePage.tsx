@@ -22,7 +22,7 @@ const HomePage: React.FC<HomePageProps> = ({ showTabs }) => {
     id: '',
     firstName: '',
     lastName: '',
-    salary: 0,
+    salary: '',
     walletAddress: '',
     position: '',
     department: ''

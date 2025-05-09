@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styles from '../../../style/admin/AddToBalance.module.css'
 import { ToastContainer, toast } from 'react-toastify'
 import { ethers } from 'ethers'
-import { checkData } from '../../../utils/shared'
+import { checkData } from '../../../utils/regexValidation'
 
 interface AddToBalance {
   onClose: () => void

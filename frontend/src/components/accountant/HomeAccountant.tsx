@@ -17,7 +17,7 @@ const HomeAccountantPage: React.FC = () => {
     id: '',
     firstName: '',
     lastName: '',
-    salary: 0,
+    salary: '',
     walletAddress: '',
     position: '',
     department: ''

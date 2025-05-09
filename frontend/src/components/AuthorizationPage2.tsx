@@ -20,45 +20,69 @@ const AuthorizationPage2: React.FC = () => {
     if (walletAddress == null || typeof window.ethereum == 'undefined') {
       navigate('/authorization1')
     } else {
-      const provider = new ethers.BrowserProvider(window.ethereum)
-      const signer = provider.getSigner(walletAddress)
-      const message = uuidv4().replace(/-/g, '').substring(0, 10)
-      const signature = await (await signer).signMessage(message)
+      let message = '',
+        signature = ''
       try {
-        const response = await axios.post('http://localhost:5001/workers_crm/authorize', {
-          expectedWalletAddress: walletAddress,
-          role,
-          message,
-          signature
-        })
-        if (response.status == 200) {
-          setStatusMessageColor('#4caf50')
-          setStatusMessage('Wallet ownership verified successfully!')
-          const { accessToken, existWorker } = await response.data
-          localStorage.setItem('access_token', accessToken)
-          setTimeout(async () => {
-            if (!existWorker) {
-              navigate('/additional-info-form')
-            } else {
-              const role = await getRole(navigate)
-              switch (role) {
-                case 'admin':
-                  navigate('/home-admin')
-                  break
-                case 'hr':
-                  navigate('/home-hr')
-                  break
-                case 'accountant':
-                  navigate('/home-accountant')
-              }
-            }
-          }, 2000)
-        }
+        const provider = new ethers.BrowserProvider(window.ethereum)
+        const signer = provider.getSigner(walletAddress)
+        message = uuidv4().replace(/-/g, '').substring(0, 10)
+        signature = await (await signer).signMessage(message)
       } catch (error: any) {
         setStatusMessageColor('red')
-        setStatusMessage(error?.response?.data?.error || 'Signature verification failed')
+        setStatusMessage('Ошибка в процессе получения подписи!')
+        return
       }
+      let existWorker: boolean
+      try {
+        existWorker = await authorize(walletAddress, message, signature)
+      } catch (error: any) {
+        setStatusMessageColor('red')
+        setStatusMessage('Ошибка в процессе подтверждения адреса!')
+        return
+      }
+      setTimeout(async () => {
+        if (!existWorker) {
+          navigate('/additional-info-form')
+        } else {
+          const role = await getRole(navigate)
+          switch (role) {
+            case 'admin':
+              navigate('/home-admin')
+              break
+            case 'hr':
+              navigate('/home-hr')
+              break
+            case 'accountant':
+              navigate('/home-accountant')
+          }
+        }
+      }, 2000)
     }
+  }
+
+  async function authorize(
+    walletAddress: string,
+    message: string,
+    signature: string
+  ): Promise<boolean> {
+    try {
+      const response = await axios.post('http://localhost:5001/workers_crm/authorize', {
+        expectedWalletAddress: walletAddress,
+        role,
+        message,
+        signature
+      })
+      if (response.status == 200) {
+        setStatusMessageColor('#4caf50')
+        setStatusMessage('Владение адресом успешно подтверждено!')
+        const { accessToken, existWorker } = await response.data
+        localStorage.setItem('access_token', accessToken)
+        return existWorker
+      }
+    } catch (error: any) {
+      throw error
+    }
+    return false
   }
   return (
     <div className={`${generalStyles.body}`}>
@@ -68,7 +92,10 @@ const AuthorizationPage2: React.FC = () => {
           Prove wallet address using Metamask
         </button>
         {statusMessage && (
-          <div className={`${styles.statusMessage}`} style={{ color: statusMessageColor }}>
+          <div
+            className={`${styles.statusMessage}`}
+            style={{ color: statusMessageColor }}
+          >
             <b>{statusMessage}</b>
           </div>
         )}
