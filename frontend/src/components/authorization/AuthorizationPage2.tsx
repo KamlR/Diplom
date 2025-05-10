@@ -4,9 +4,9 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { ethers } from 'ethers'
 import { v4 as uuidv4 } from 'uuid'
 import axios from 'axios'
-import { getRole } from '../utils/shared'
-import styles from '../style/general/AuthorizationPage2.module.css'
-import generalStyles from '../style/general/General.module.css'
+import { getRole } from '../../utils/shared'
+import styles from '../../style/general/AuthorizationPage2.module.css'
+import generalStyles from '../../style/general/General.module.css'
 
 const AuthorizationPage2: React.FC = () => {
   const navigate = useNavigate()

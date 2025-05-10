@@ -1,13 +1,14 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import GreetinPage from './components/GreetingPage'
-import AuthorizationPage1 from './components/AuthorizationPage1'
-import AuthorizationPage2 from './components/AuthorizationPage2'
-import AditionalInfoForm from './components/AdditionalInfoForm'
+import GreetinPage from './components/authorization/GreetingPage'
+import AuthorizationPage1 from './components/authorization/AuthorizationPage1'
+import AuthorizationPage2 from './components/authorization/AuthorizationPage2'
+import AditionalInfoForm from './components/authorization/AdditionalInfoForm'
 import HomeAdminPage from './components/admin/HomeAdmin'
 import HomeHRPage from './components/hr/HomeHr'
 import HomeAccountantPage from './components/accountant/HomeAccountant'
 import TelegamBot from './components/accountant/TelegramBot'
+import ProtectedRoute from './ProtectedRoute'
 
 const App: React.FC = () => {
   return (
@@ -17,9 +18,30 @@ const App: React.FC = () => {
         <Route path="/authorization1" element={<AuthorizationPage1 />} />
         <Route path="/authorization2" element={<AuthorizationPage2 />} />
         <Route path="/additional-info-form" element={<AditionalInfoForm />} />
-        <Route path="/home-admin" element={<HomeAdminPage />} />
-        <Route path="/home-hr" element={<HomeHRPage />} />
-        <Route path="/home-accountant" element={<HomeAccountantPage />} />
+        <Route
+          path="/home-admin"
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <HomeAdminPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/home-accountant"
+          element={
+            <ProtectedRoute allowedRoles={['accountant']}>
+              <HomeAccountantPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/home-hr"
+          element={
+            <ProtectedRoute allowedRoles={['hr']}>
+              <HomeHRPage />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/accountant-telegramBot" element={<TelegamBot />} />
       </Routes>
     </Router>

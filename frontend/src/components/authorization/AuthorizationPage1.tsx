@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ethers } from 'ethers'
-import abi from '../abis/CryptoPayments.json'
+import abi from '../../abis/CryptoPayments.json'
 
-import styles from '../style/general/AuthorizationPage1.module.css'
-import generalStyles from '../style/general/General.module.css'
+import styles from '../../style/general/AuthorizationPage1.module.css'
+import generalStyles from '../../style/general/General.module.css'
 
 declare global {
   interface Window {

@@ -2,11 +2,11 @@ import React from 'react'
 import axios from 'axios'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { workWithTokens } from '../utils/shared'
-import { checkData } from '../utils/regexValidation'
+import { workWithTokens } from '../../utils/shared'
+import { checkData } from '../../utils/regexValidation'
 import { ToastContainer, toast } from 'react-toastify'
-import styles from '../style/general/AdditionalInfoForm.module.css'
-import generalStyles from '../style/general/General.module.css'
+import styles from '../../style/general/AdditionalInfoForm.module.css'
+import generalStyles from '../../style/general/General.module.css'
 
 const AditionalInfoForm: React.FC = () => {
   const navigate = useNavigate()

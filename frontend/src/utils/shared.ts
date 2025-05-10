@@ -23,7 +23,7 @@ export async function workWithTokens(error: any, navigate: NavigateFunction) {
   }
 }
 
-export async function getRole(navigate: NavigateFunction): Promise<string | null> {
+export async function getRole(navigate: NavigateFunction): Promise<string> {
   const accessToken = localStorage.getItem('access_token')
   try {
     const response = await axios.get('http://localhost:5001/workers_crm/role', {
@@ -44,5 +44,5 @@ export async function getRole(navigate: NavigateFunction): Promise<string | null
       navigate('/authorization1')
     }
   }
-  return null
+  return ''
 }

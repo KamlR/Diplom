@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import { getRole } from '../utils/shared'
+import { getRole } from '../../utils/shared'
 
-import styles from '../style/general/GreetingPage.module.css'
-import generalStyles from '../style/general/General.module.css'
+import styles from '../../style/general/GreetingPage.module.css'
+import generalStyles from '../../style/general/General.module.css'
 
 const GreetinPage: React.FC = () => {
   const navigate = useNavigate()
@@ -16,10 +15,15 @@ const GreetinPage: React.FC = () => {
           navigate('/authorization1')
         } else {
           const role = await getRole(navigate)
-          if (role === 'admin') {
-            navigate('/home-admin')
-          } else if (role === 'accountant') {
-            navigate('/home-accountant')
+          switch (role) {
+            case 'admin':
+              navigate('/home-admin')
+              break
+            case 'hr':
+              navigate('/home-hr')
+              break
+            case 'accountant':
+              navigate('/home-accountant')
           }
         }
       }
