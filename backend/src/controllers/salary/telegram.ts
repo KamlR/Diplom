@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { connectToDatabase } from '../../../database/database'
+import WorkerCrm from '../../../database/src/models/workerCrm'
 import TelegramBot from 'node-telegram-bot-api'
 
 const TELEGRAM_BOT_TOKEN = '7553716526:AAGcv1jbguuhO3JrmRY529Vhfnop-Ij4tnE'
@@ -11,29 +11,24 @@ bot.setWebHook(`${url}/bot${TELEGRAM_BOT_TOKEN}`)
 bot.onText(/\/start/, async msg => {
   const chatID = msg.chat.id
   const telegramID = msg.from?.username
-
-  const db = await connectToDatabase()
-  const workersCrmCollection = db.collection('workers_crm')
-
-  const user = await workersCrmCollection.findOne({ telegramID })
-  if (!user) {
-    bot.sendMessage(chatID, 'У вас нет доступа к боту!')
-  } else {
-    await workersCrmCollection.updateOne(
-      { telegramID },
-      { $set: { chatID } },
-      { upsert: false }
-    )
-    bot.sendMessage(chatID, 'Вы успешно подписаны на уведомления!')
+  try {
+    const user = await WorkerCrm.findOne({ telegramID })
+    if (!user) {
+      bot.sendMessage(chatID, 'У вас нет доступа к боту!')
+    } else {
+      const walletAddress = user.walletAddress
+      await WorkerCrm.updateOne({ walletAddress }, { $set: { chatID } }, { upsert: false })
+      bot.sendMessage(chatID, 'Вы успешно подписаны на уведомления!')
+    }
+  } catch (error) {
+    bot.sendMessage(chatID, 'Возникла ошибка, попробуйте подключить бота позже!')
   }
 })
 
 export async function sendMessages(message: string, filter: Object) {
   const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`
   try {
-    const db = await connectToDatabase()
-    const workersCrmCollection = db.collection('workers_crm')
-    const users = await workersCrmCollection.find(filter).toArray()
+    const users = await WorkerCrm.find(filter)
     await Promise.all(
       users.map(user =>
         axios.post(url, {

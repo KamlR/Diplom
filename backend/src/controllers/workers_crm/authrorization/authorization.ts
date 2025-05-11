@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express'
-import { connectToDatabase } from '../../../../database/database'
+import WorkerCrm from '../../../../database/src/models/workerCrm'
+import Accountant from '../../../../database/src/models/accountant'
 import { validateAuthorization, validateAddInfoSchema } from './schemas'
 import AuthMiddleware from '../../../tokens/AuthMiddleware'
 import { ethers } from 'ethers'
@@ -17,34 +18,27 @@ authorizationController.post('/authorize', async (req: Request, res: Response) =
     return
   }
   const { expectedWalletAddress, role, message, signature } = req.body
-  const isWalletAddressValid = checkWalletAddress(
-    expectedWalletAddress,
-    message,
-    signature
-  )
+  const isWalletAddressValid = checkWalletAddress(expectedWalletAddress, message, signature)
   if (!isWalletAddressValid) {
     res.status(400).json('Invalid signature')
     return
   }
   let existWorker
   try {
-    const db = await connectToDatabase()
-    const workersCrmCollection = db.collection('workers_crm')
-    existWorker = await workersCrmCollection.findOne({
-      walletAddress: expectedWalletAddress
-    })
-    if (existWorker == null) {
-      await workersCrmCollection.insertOne({
+    existWorker = await WorkerCrm.exists({ walletAddress: expectedWalletAddress })
+    if (!existWorker) {
+      const newWorker = new WorkerCrm({
         walletAddress: expectedWalletAddress,
         role: role
       })
+      await newWorker.save()
 
       if (role == 'accountant') {
-        const accountsCollection = db.collection('accountants')
-        await accountsCollection.insertOne({
+        const newAccountant = new Accountant({
           walletAddress: expectedWalletAddress,
           signStatus: false
         })
+        await newAccountant.save()
       }
     }
   } catch (error) {
@@ -55,13 +49,9 @@ authorizationController.post('/authorize', async (req: Request, res: Response) =
   const accessToken = jwt.sign({ expectedWalletAddress }, process.env.ACCESS_TOKEN_KEY, {
     expiresIn: '10h'
   })
-  const refreshToken = jwt.sign(
-    { expectedWalletAddress },
-    process.env.REFRESH_TOKEN_KEY,
-    {
-      expiresIn: '7d'
-    }
-  )
+  const refreshToken = jwt.sign({ expectedWalletAddress }, process.env.REFRESH_TOKEN_KEY, {
+    expiresIn: '7d'
+  })
 
   // Тут потом можно добавить ещё настроек
   res.cookie('refreshToken', refreshToken, {
@@ -84,20 +74,24 @@ authorizationController.post(
     const valid = validateAddInfoSchema(req.body)
     if (!valid) {
       res.status(400).json({ error: 'Invalid data format' })
+      return
     }
     const { firstName, lastName, telegramID } = req.body
     const walletAddress = req.params.walletAddress
     try {
-      const db = await connectToDatabase()
-      const workersCrmCollection = db.collection('workers_crm')
-      await workersCrmCollection.updateOne(
+      const result = await WorkerCrm.updateOne(
         { walletAddress },
-        { $set: { lastName, firstName, telegramID } }
+        {
+          $set: {
+            lastName,
+            firstName,
+            telegramID
+          }
+        }
       )
       res.status(200).json()
     } catch (error) {
-      console.log('Error during addInfoController')
-      res.status(500).json({ error: 'Internal server error' })
+      res.status(500).json({ error: 'Failed to add info' })
     }
   }
 )
@@ -107,10 +101,12 @@ authorizationController.get(
   AuthMiddleware.verifyToken,
   async (req: Request, res: Response) => {
     const walletAddress = req.params.walletAddress
-    const db = await connectToDatabase()
-    const workersCrmCollection = db.collection('workers_crm')
-    const user = await workersCrmCollection.findOne({ walletAddress })
-    res.status(200).json({ role: user?.role })
+    try {
+      const workerCrm = await WorkerCrm.findOne({ walletAddress }, { role: 1, _id: 0 })
+      res.status(200).json({ role: workerCrm?.role })
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to get role' })
+    }
   }
 )
 
@@ -119,11 +115,12 @@ authorizationController.get(
   AuthMiddleware.verifyToken,
   async (req: Request, res: Response) => {
     const walletAddress = req.params.walletAddress
-    const db = await connectToDatabase()
-    const workersCrmCollection = db.collection('workers_crm')
-    const user = await workersCrmCollection.findOne({ walletAddress })
-
-    res.status(200).json({ chatID: user?.chatID })
+    try {
+      const workerCrm = await WorkerCrm.findOne({ walletAddress }, { chatID: 1, _id: 0 })
+      res.status(200).json({ chatID: workerCrm?.chatID })
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to get chatID' })
+    }
   }
 )
 

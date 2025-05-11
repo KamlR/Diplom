@@ -1,12 +1,10 @@
 import { ethers } from 'ethers'
 import { getUserOpHash } from '@account-abstraction/utils'
-import { connectToDatabase } from '../../../database/database'
 import fs from 'fs'
+import Worker from '../../../database/src/models/worker'
 
 export async function formUserOperation() {
-  const db = await connectToDatabase()
-  const workersCollection = db.collection('workers')
-  const workers = await workersCollection.find({}, { projection: { walletAddress: 1, salary: 1 } }).toArray()
+  const workers = await Worker.find({}, 'walletAddress salary')
   const addresses = workers.map(worker => worker.walletAddress)
   const salaries = workers.map(worker => ethers.parseUnits(worker.salary.toString(), 18))
   const paySalaryFunctionSignature = 'paySalary(address[],uint256[])'

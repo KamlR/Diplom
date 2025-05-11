@@ -19,7 +19,7 @@ const HomePage: React.FC<HomePageProps> = ({ showTabs }) => {
   const [mode, setMode] = useState('')
   const [activeTab, setActiveTab] = useState('employees')
   const [defaultEmployee] = useState({
-    id: '',
+    _id: '',
     firstName: '',
     lastName: '',
     salary: '',
@@ -48,6 +48,7 @@ const HomePage: React.FC<HomePageProps> = ({ showTabs }) => {
         }
       })
       if (response.status == 200) {
+        console.log(response.data.workers)
         setEmployees(response.data.workers)
         return true
       }
@@ -80,15 +81,17 @@ const HomePage: React.FC<HomePageProps> = ({ showTabs }) => {
 
   const handleEmployeeChanged = (updatedEmployee: Employee) => {
     setIsFormOpen(false)
-    const id = updatedEmployee.id
+    const id = updatedEmployee._id
     setEmployees(prevEmployees =>
-      prevEmployees.map(employee => (employee.id === id ? { ...employee, ...updatedEmployee } : employee))
+      prevEmployees.map(employee =>
+        employee._id === id ? { ...employee, ...updatedEmployee } : employee
+      )
     )
   }
 
   const handleEmployeeDeleted = (id: string) => {
     setIsFormOpen(false)
-    setEmployees(prevEmployees => prevEmployees.filter(employee => employee.id !== id))
+    setEmployees(prevEmployees => prevEmployees.filter(employee => employee._id !== id))
   }
 
   const onClickLeftMenu = (tab: string) => {
@@ -162,7 +165,10 @@ const HomePage: React.FC<HomePageProps> = ({ showTabs }) => {
           <>
             <div className={styles.headerContainer}>
               <h2>Список сотрудников</h2>
-              <button className={styles.addButton} onClick={() => onClickOpenForm('add', defaultEmployee)}>
+              <button
+                className={styles.addButton}
+                onClick={() => onClickOpenForm('add', defaultEmployee)}
+              >
                 <span className={styles.plus}>+</span>
               </button>
             </div>
@@ -171,7 +177,7 @@ const HomePage: React.FC<HomePageProps> = ({ showTabs }) => {
               {employees.map(employee => (
                 <div
                   className={styles.employee_card}
-                  key={employee.id}
+                  key={employee._id}
                   onClick={() => onClickOpenForm('change', employee)}
                 >
                   <h3>
@@ -202,7 +208,10 @@ const HomePage: React.FC<HomePageProps> = ({ showTabs }) => {
           />
         )}
         {activeTab === 'bundler' && (
-          <BalanceInfo component="Bundler" componentAddress="0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199" />
+          <BalanceInfo
+            component="Bundler"
+            componentAddress="0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199"
+          />
         )}
         {activeTab === 'salary-date' && <SalaryDate />}
       </main>

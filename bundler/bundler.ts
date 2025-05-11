@@ -33,7 +33,8 @@ app.post('/send-user-operation', async (req, res) => {
     console.log('✅ Функция на смарт контракте успешно выполнена')
     res.status(200).json()
   } catch (error: any) {
-    console.log('❌ Ошибка во время выполнения выплат')
+    console.log('❌ Ошибка во время выполнения выплат', error)
+    res.status(500).send({})
   }
 })
 
@@ -43,7 +44,11 @@ async function getProviderAndSigner() {
   return [provider, signer]
 }
 
-async function validateUserOp(provider: JsonRpcProvider | JsonRpcSigner, entryPoint: string, userOp: UserOperation) {
+async function validateUserOp(
+  provider: JsonRpcProvider | JsonRpcSigner,
+  entryPoint: string,
+  userOp: UserOperation
+) {
   const entryPointContract = new ethers.Contract(entryPoint, abi, provider)
   const callData = entryPointContract.interface.encodeFunctionData('validateUserOp', [userOp])
   const result = await provider.call({

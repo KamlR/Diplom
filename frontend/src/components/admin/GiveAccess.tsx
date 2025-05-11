@@ -50,15 +50,15 @@ const GiveAccess: React.FC = () => {
     }
 
     const result = await sendUserOperation(userOp)
-    if (result) {
-      toast.success('Доступ выдан!', {
+    if (result[0]) {
+      toast.success(result[1], {
         position: 'top-center',
         autoClose: 2000
       })
     } else {
-      toast.error('Ошибка в процессе выдачи доступа!', {
+      toast.error(result[1], {
         position: 'top-center',
-        autoClose: 3000
+        autoClose: 4000
       })
     }
   }
@@ -77,7 +77,7 @@ const GiveAccess: React.FC = () => {
     checkData(value, regex, 'give_access', setValidRole, setBorderRoleStyle)
   }
 
-  async function sendUserOperation(userOp: any): Promise<boolean> {
+  async function sendUserOperation(userOp: any): Promise<[boolean, string]> {
     const entryPoint = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
     try {
       const response = await axios.post(
@@ -93,12 +93,35 @@ const GiveAccess: React.FC = () => {
         }
       )
       if (response.status == 200) {
-        return true
+        return [true, 'Доступ выдан']
       }
-    } catch (error) {
-      return false
+    } catch (error: any) {
+      if (error?.response?.status === 400) {
+        let errorMessageForUser = ''
+        const errorMessage = error.response?.data?.error
+        switch (errorMessage) {
+          case 'Not enough money in SCA deposit to pay for gas':
+            errorMessageForUser =
+              'На балансе смарт контракта недостаточно денег для покрытия gas за транзакцию!'
+            break
+          case 'Signer not found in usersWithAccess':
+            errorMessageForUser =
+              'Транзакция была подписана с аккаунта, у которого нет доступа к системе! Проверьте выбранный аккаунт в MetaMask!'
+            break
+          case 'Signer must be admin':
+            errorMessageForUser = 'Данная транзакция может быть выполнена только от лица admin!'
+            break
+          case 'Signer must be accountant':
+            errorMessageForUser =
+              'Данная транзакция может быть выполнена только от лица accountant!'
+            break
+        }
+        return [false, errorMessageForUser]
+      } else {
+        return [false, 'Ошибка в процессе выдачи доступа!']
+      }
     }
-    return false
+    return [false, '']
   }
   return (
     <div className={styles.accessForm}>

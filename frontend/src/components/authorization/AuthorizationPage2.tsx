@@ -41,6 +41,7 @@ const AuthorizationPage2: React.FC = () => {
         return
       }
       setTimeout(async () => {
+        console.log(existWorker)
         if (!existWorker) {
           navigate('/additional-info-form')
         } else {
@@ -92,10 +93,7 @@ const AuthorizationPage2: React.FC = () => {
           Prove wallet address using Metamask
         </button>
         {statusMessage && (
-          <div
-            className={`${styles.statusMessage}`}
-            style={{ color: statusMessageColor }}
-          >
+          <div className={`${styles.statusMessage}`} style={{ color: statusMessageColor }}>
             <b>{statusMessage}</b>
           </div>
         )}

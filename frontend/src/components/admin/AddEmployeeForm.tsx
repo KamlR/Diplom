@@ -6,6 +6,7 @@ import { checkData } from '../../utils/regexValidation'
 import { Employee } from '../../models/employee'
 import styles from '../../style/admin/AddEmployeeForm.module.css'
 import { ToastContainer, toast } from 'react-toastify'
+import e from 'express'
 
 interface AddEmployeeFormProps {
   onAddEmployee: (newEmployee: Employee) => void
@@ -60,7 +61,6 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
     }
 
     setEmployee(updatedEmployee)
-    console.log(employee)
     if (name == 'walletAddress') {
       const regex = /^0x[a-fA-F0-9]{40}$/
       checkData(value, regex, 'employee', setValidData, setBorderWalletAddressStyle)
@@ -74,7 +74,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
 
   function checkFieldsForEmpty(employee: Employee): boolean {
     return (Object.keys(employee) as (keyof Employee)[]).every(key => {
-      if (key == 'id') {
+      if (key == '_id') {
         return true
       }
       const value = employee[key]
@@ -98,7 +98,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
       result = await changeEmployee()
     }
     if (result) {
-      await setSuccessMessage()
+      await setSuccessMessage(result.toString())
     } else {
       await setErrorMessage()
     }
@@ -108,18 +108,22 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
     const result = await deleteEmployee()
     if (result) {
       await setSuccessMessage()
-      onDeleteEmployee(employee.id)
+      onDeleteEmployee(employee._id)
     } else {
       await setErrorMessage()
     }
   }
 
-  async function addEmployee(): Promise<boolean> {
+  async function addEmployee(): Promise<string | null> {
     try {
       const accessToken = localStorage.getItem('access_token')
       const employeeToSend = {
-        ...employee,
-        salary: Number(employee.salary)
+        firstName: employee.firstName,
+        lastName: employee.lastName,
+        salary: Number(employee.salary),
+        walletAddress: employee.walletAddress,
+        position: employee.position,
+        department: employee.department
       }
       const response = await axios.post('http://localhost:5001/workers', employeeToSend, {
         headers: {
@@ -127,7 +131,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
         }
       })
       if (response.status == 200) {
-        return true
+        return response.data.worker._id
       }
     } catch (error: any) {
       if (error?.response?.status === 401) {
@@ -136,21 +140,29 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
         }
       }
     }
-    return false
+    return null
   }
 
   async function changeEmployee(): Promise<boolean> {
     try {
       const accessToken = localStorage.getItem('access_token')
       const employeeToSend = {
-        ...employee,
-        salary: Number(employee.salary)
+        firstName: employee.firstName,
+        lastName: employee.lastName,
+        salary: Number(employee.salary),
+        walletAddress: employee.walletAddress,
+        position: employee.position,
+        department: employee.department
       }
-      const response = await axios.put('http://localhost:5001/workers', employeeToSend, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`
+      const response = await axios.put(
+        `http://localhost:5001/workers/${employee._id}`,
+        employeeToSend,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
         }
-      })
+      )
       if (response.status == 200) {
         return true
       }
@@ -168,17 +180,15 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
   async function deleteEmployee(): Promise<boolean> {
     try {
       const accessToken = localStorage.getItem('access_token')
-      const response = await axios.delete('http://localhost:5001/workers/' + employee.id, {
+      const response = await axios.delete(`http://localhost:5001/workers/${employee._id}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`
-        },
-        params: { id: employee.id }
+        }
       })
       if (response.status == 200) {
         return true
       }
     } catch (error: any) {
-      console.log(error)
       if (error?.response?.status === 401) {
         if (await workWithTokens(error, navigate)) {
           return await deleteEmployee()
@@ -190,7 +200,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
     return false
   }
 
-  async function setSuccessMessage() {
+  async function setSuccessMessage(id: string = '') {
     setToastMessage('✅ Успешно!')
     setToastColor('#4caf50')
     setShowToast(true)
@@ -198,10 +208,14 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
       setTimeout(() => {
         setShowToast(false)
         resolve()
-      }, 2000)
+      }, 1000)
     })
     if (mode == 'add') {
-      onAddEmployee(employee)
+      const employeeWithId = {
+        ...employee,
+        ['_id']: id
+      }
+      onAddEmployee(employeeWithId)
     } else if (mode == 'change') {
       onCnangeEmployee(employee)
     }

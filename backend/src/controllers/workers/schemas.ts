@@ -15,10 +15,9 @@ const addEmployeeSchema = {
   required: ['firstName', 'lastName', 'walletAddress', 'position', 'department']
 }
 
-const changeEmployeeSchema = {
+const updateEmployeeSchema = {
   type: 'object',
   properties: {
-    id: { type: 'string' },
     firstName: { type: 'string' },
     lastName: { type: 'string' },
     salary: { type: 'number' },
@@ -26,12 +25,39 @@ const changeEmployeeSchema = {
     position: { type: 'string' },
     department: { type: 'string' }
   },
-  required: ['id', 'firstName', 'lastName', 'walletAddress', 'position', 'department'],
+  required: ['firstName', 'lastName', 'salary', 'walletAddress', 'position', 'department'],
   additionalProperties: false
 }
 
-const deleteEmployeeSchema = {}
+const updateEmployee = {
+  type: 'object',
+  properties: {
+    params: {
+      type: 'object',
+      properties: {
+        id: { type: 'string', pattern: '^[0-9a-fA-F]{24}$' }
+      },
+      required: ['id']
+    },
+    body: updateEmployeeSchema
+  },
+  required: ['params', 'body']
+}
+
+const deleteEmployeeSchema = {
+  type: 'object',
+  properties: {
+    params: {
+      type: 'object',
+      properties: {
+        id: { type: 'string', pattern: '^[0-9a-fA-F]{24}$' }
+      },
+      required: ['id']
+    }
+  },
+  required: ['params']
+}
 
 export const validateAddEmployee = ajv.compile(addEmployeeSchema)
-export const validateChangeEmployee = ajv.compile(changeEmployeeSchema)
+export const validateChangeEmployee = ajv.compile(updateEmployee)
 export const validateDeleteEmployee = ajv.compile(deleteEmployeeSchema)

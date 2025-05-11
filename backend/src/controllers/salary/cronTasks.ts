@@ -6,16 +6,22 @@ import { sendMessages } from './telegram'
 let payrollCronJob: ScheduledTask | null = null
 let allertingCronJob: ScheduledTask | null = null
 
+// TODO: можно делать рассылку о том, что дата выплат изменилась
 export function startPayrollJob(schedule: string) {
   if (payrollCronJob) {
     payrollCronJob.stop()
   }
-
-  payrollCronJob = cron.schedule(schedule, async () => {
-    await formUserOperation()
-    const message = '📢 Пожалуйста, подпишите выплаты зарплат.'
-    await sendMessages(message, { role: 'accountant' })
-  })
+  payrollCronJob = cron.schedule(
+    schedule,
+    async () => {
+      await formUserOperation()
+      const message = '📢 Пожалуйста, подпишите выплаты зарплат.'
+      await sendMessages(message, { role: 'accountant' })
+    },
+    {
+      timezone: 'UTC'
+    }
+  )
 }
 
 export function startAllertinJob(schedule: string) {

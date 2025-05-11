@@ -47,19 +47,26 @@ const ChangeEmployeeData: React.FC<ChangeEmployeeDataProps> = ({
     try {
       const accessToken = localStorage.getItem('access_token')
       const employeeToSend = {
-        ...employee,
-        salary: Number(employee.salary)
+        firstName: employee.firstName,
+        lastName: employee.lastName,
+        salary: Number(employee.salary),
+        walletAddress: employee.walletAddress,
+        position: employee.position,
+        department: employee.department
       }
-      const response = await axios.put('http://localhost:5001/workers', employeeToSend, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`
+      const response = await axios.put(
+        `http://localhost:5001/workers/${employee._id}`,
+        employeeToSend,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
         }
-      })
+      )
       if (response.status == 200) {
         return true
       }
     } catch (error: any) {
-      console.log(error)
       if (error?.response?.status === 401) {
         if (await workWithTokens(error, navigate)) {
           return await changeEmployee()
@@ -84,23 +91,11 @@ const ChangeEmployeeData: React.FC<ChangeEmployeeDataProps> = ({
           <div className={styles.formGrid}>
             <div className={styles.inputGroup}>
               <label>Имя:</label>
-              <input
-                type="text"
-                name="firstName"
-                value={employee.firstName}
-                required
-                disabled
-              />
+              <input type="text" name="firstName" value={employee.firstName} required disabled />
             </div>
             <div className={styles.inputGroup}>
               <label>Фамилия:</label>
-              <input
-                type="text"
-                name="lastName"
-                value={employee.lastName}
-                required
-                disabled
-              />
+              <input type="text" name="lastName" value={employee.lastName} required disabled />
             </div>
             <div className={styles.inputGroup}>
               <label>Зарплата:</label>
@@ -125,23 +120,11 @@ const ChangeEmployeeData: React.FC<ChangeEmployeeDataProps> = ({
             </div>
             <div className={styles.inputGroup}>
               <label>Должность:</label>
-              <input
-                type="text"
-                name="position"
-                value={employee.position}
-                required
-                disabled
-              />
+              <input type="text" name="position" value={employee.position} required disabled />
             </div>
             <div className={styles.inputGroup}>
               <label>Отдел:</label>
-              <input
-                type="text"
-                name="department"
-                value={employee.department}
-                required
-                disabled
-              />
+              <input type="text" name="department" value={employee.department} required disabled />
             </div>
           </div>
           {/* {showToast && (

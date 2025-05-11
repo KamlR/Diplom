@@ -14,7 +14,7 @@ const HomeAccountantPage: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [selectedEmployee, setSelectedEmployee] = useState<Employee>({
-    id: '',
+    _id: '',
     firstName: '',
     lastName: '',
     salary: '',
@@ -36,9 +36,11 @@ const HomeAccountantPage: React.FC = () => {
 
   const handleEmployeeChanged = (updatedEmployee: Employee) => {
     setIsFormOpen(false)
-    const id = updatedEmployee.id
+    const id = updatedEmployee._id
     setEmployees(prevEmployees =>
-      prevEmployees.map(employee => (employee.id === id ? { ...employee, ...updatedEmployee } : employee))
+      prevEmployees.map(employee =>
+        employee._id === id ? { ...employee, ...updatedEmployee } : employee
+      )
     )
   }
 
@@ -118,7 +120,11 @@ const HomeAccountantPage: React.FC = () => {
             <div className={styles.employee_list}>
               {errorMessage && <div className={styles.error_message}>{errorMessage}</div>}
               {employees.map(employee => (
-                <div className={styles.employee_card} key={employee.id} onClick={() => onClickOpenForm(employee)}>
+                <div
+                  className={styles.employee_card}
+                  key={employee._id}
+                  onClick={() => onClickOpenForm(employee)}
+                >
                   <h3>
                     {employee.firstName} {employee.lastName}
                   </h3>
@@ -140,7 +146,10 @@ const HomeAccountantPage: React.FC = () => {
           </>
         )}
         {activeTab == 'salary' && (
-          <Salary userOpDataAvailable={userOpDataAvailable} setUserOpDataAvailable={setUserOpDataAvailable} />
+          <Salary
+            userOpDataAvailable={userOpDataAvailable}
+            setUserOpDataAvailable={setUserOpDataAvailable}
+          />
         )}
       </main>
 

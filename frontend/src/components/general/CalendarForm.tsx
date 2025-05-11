@@ -66,9 +66,8 @@ const CalendarForm: React.FC<CalendarFormProps> = ({ onCloseCalendar, salaryDate
           <DatePicker
             selected={date}
             onChange={d => setDate(d)}
-            showTimeSelect
+            showTimeInput
             timeFormat="HH:mm"
-            timeIntervals={15}
             dateFormat="dd.MM.yyyy HH:mm"
             timeCaption="Время"
             inline

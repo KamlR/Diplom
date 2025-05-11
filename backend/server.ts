@@ -6,7 +6,8 @@ import workersController from './src/controllers/workers/crud'
 import salaryController from './src/controllers/salary/salaryPaymentProcess'
 //import './src/controllers/salary/cronTasks'
 import './src/controllers/salary/telegram'
-import { formUserOperation } from './src/controllers/salary/formUserOperation'
+import { connectToDatabase } from './database/src/database'
+import { startPayrollJob } from './src/controllers/salary/cronTasks'
 
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
@@ -28,7 +29,7 @@ app.use(
 app.use((req, res, next) => {
   logger(req, res, next)
 })
-formUserOperation()
+connectToDatabase()
 
 app.use('/workers_crm', authorizationController)
 app.use('/tokens', tokensController)
