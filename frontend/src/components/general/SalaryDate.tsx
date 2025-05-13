@@ -2,10 +2,10 @@ import React, { use, useEffect, useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { workWithTokens } from '../../utils/shared'
-
 import CalendarForm from './CalendarForm'
-
 import styles from '../../style/general/SalaryDate.module.css'
+
+const { REACT_APP_SERVER_BASE_URL } = process.env
 
 const SalaryDate: React.FC = () => {
   const navigate = useNavigate()
@@ -34,7 +34,7 @@ const SalaryDate: React.FC = () => {
     setErrorMessage('')
     const accessToken = localStorage.getItem('access_token')
     try {
-      const response = await axios.get('http://localhost:5001/salary/date', {
+      const response = await axios.get(`${REACT_APP_SERVER_BASE_URL}/salary/date`, {
         withCredentials: true,
         headers: {
           Authorization: `Bearer ${accessToken}`

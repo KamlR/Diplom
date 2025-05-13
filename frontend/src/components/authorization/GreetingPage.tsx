@@ -31,8 +31,8 @@ const GreetinPage: React.FC = () => {
       checkAuth()
     }, 1500) // 1 секунда
 
-    return () => clearTimeout(timeoutId) // Очищаем таймер при размонтировании компонента
-  }, [navigate]) // Добавляем `navigate` в зависимости
+    return () => clearTimeout(timeoutId)
+  }, [navigate])
 
   return (
     <div className={`${generalStyles.body}`}>

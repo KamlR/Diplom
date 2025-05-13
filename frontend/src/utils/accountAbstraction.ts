@@ -1,14 +1,15 @@
 import { ethers } from 'ethers'
 import { keccak256, AbiCoder } from 'ethers'
 
+const { REACT_APP_SMART_CONTRACT_ADDRESS, REACT_APP_ENTRYPOINT_ADDRESS, REACT_APP_CHAIN_ID } =
+  process.env
+
 export function formUserOperation(walletAddress: string, role: string): any {
   const giveAccessToEmployeeFunctionSignature = 'giveAccessToEmployee(address,string)'
-  const iface = new ethers.Interface([
-    `function ${giveAccessToEmployeeFunctionSignature}`
-  ])
+  const iface = new ethers.Interface([`function ${giveAccessToEmployeeFunctionSignature}`])
   const callData = iface.encodeFunctionData('giveAccessToEmployee', [walletAddress, role])
   const userOp = {
-    sender: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+    sender: REACT_APP_SMART_CONTRACT_ADDRESS,
     nonce: 0,
     initCode: '0x',
     callData: callData,
@@ -20,8 +21,6 @@ export function formUserOperation(walletAddress: string, role: string): any {
     paymasterAndData: '0x',
     signature: ''
   }
-  const entryPointAddress = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
-  const chainId = 1337
 
   const abi = AbiCoder.defaultAbiCoder()
   const userOpPackHash = keccak256(
@@ -56,7 +55,7 @@ export function formUserOperation(walletAddress: string, role: string): any {
   const finalHash = keccak256(
     abi.encode(
       ['bytes32', 'address', 'uint256'],
-      [userOpPackHash, entryPointAddress, chainId]
+      [userOpPackHash, REACT_APP_ENTRYPOINT_ADDRESS, REACT_APP_CHAIN_ID]
     )
   )
 

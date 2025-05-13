@@ -7,6 +7,8 @@ import axios from 'axios'
 import styles from '../../style/general/CalendarForm.module.css'
 import { workWithTokens } from '../../utils/shared'
 
+const { REACT_APP_SERVER_BASE_URL } = process.env
+
 interface CalendarFormProps {
   onCloseCalendar: () => void
   salaryDate: Date | null
@@ -32,7 +34,7 @@ const CalendarForm: React.FC<CalendarFormProps> = ({ onCloseCalendar, salaryDate
     try {
       const accessToken = localStorage.getItem('access_token')
       const response = await axios.put(
-        'http://localhost:5001/salary/change-salary-date',
+        `${REACT_APP_SERVER_BASE_URL}/salary/change-salary-date`,
         { newDate: date?.toISOString() },
         {
           headers: {

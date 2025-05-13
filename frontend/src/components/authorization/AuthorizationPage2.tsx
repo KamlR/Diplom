@@ -8,6 +8,8 @@ import { getRole } from '../../utils/shared'
 import styles from '../../style/general/AuthorizationPage2.module.css'
 import generalStyles from '../../style/general/General.module.css'
 
+const { REACT_APP_SERVER_BASE_URL } = process.env
+
 const AuthorizationPage2: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
@@ -16,6 +18,8 @@ const AuthorizationPage2: React.FC = () => {
   const [statusMessageColor, setStatusMessageColor] = useState<string>('')
 
   const handlerProveWalletAddress = async () => {
+    console.log('Hello')
+    console.log(REACT_APP_SERVER_BASE_URL)
     const walletAddress = localStorage.getItem('walletAddress')
     if (walletAddress == null || typeof window.ethereum == 'undefined') {
       navigate('/authorization1')
@@ -38,6 +42,7 @@ const AuthorizationPage2: React.FC = () => {
       } catch (error: any) {
         setStatusMessageColor('red')
         setStatusMessage('Ошибка в процессе подтверждения адреса!')
+        console.log(error)
         return
       }
       setTimeout(async () => {
@@ -67,7 +72,7 @@ const AuthorizationPage2: React.FC = () => {
     signature: string
   ): Promise<boolean> {
     try {
-      const response = await axios.post('http://localhost:5001/workers_crm/authorize', {
+      const response = await axios.post(`${REACT_APP_SERVER_BASE_URL}/workers-crm/authorize`, {
         expectedWalletAddress: walletAddress,
         role,
         message,

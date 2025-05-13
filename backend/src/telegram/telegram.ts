@@ -1,12 +1,14 @@
 import axios from 'axios'
-import WorkerCrm from '../../../database/src/models/workerCrm'
+import WorkerCrm from '../../database/src/models/workerCrm'
 import TelegramBot from 'node-telegram-bot-api'
+import dotenv from 'dotenv'
 
-const TELEGRAM_BOT_TOKEN = '7553716526:AAGcv1jbguuhO3JrmRY529Vhfnop-Ij4tnE'
-const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true }) // Или используешь вебхуки
+dotenv.config({ path: './env/telegram.env' })
+const TELEGRAM_BOT_TOKEN: string = process.env.TELEGRAM_BOT_TOKEN as string
+const { SERVER_URL } = process.env
 
-const url = 'http://localhost:5001' // Здесь будет твой публичный серверный URL
-bot.setWebHook(`${url}/bot${TELEGRAM_BOT_TOKEN}`)
+const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true })
+bot.setWebHook(`${SERVER_URL}/bot${TELEGRAM_BOT_TOKEN}`)
 
 bot.onText(/\/start/, async msg => {
   const chatID = msg.chat.id

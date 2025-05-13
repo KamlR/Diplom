@@ -6,6 +6,9 @@ import axios from 'axios'
 import { Employee } from '../../models/employee'
 import { workWithTokens } from '../../utils/shared'
 import ChangeEmployeeData from './ChangeEmployeeData'
+
+const { REACT_APP_SERVER_BASE_URL } = process.env
+
 const HomeAccountantPage: React.FC = () => {
   const navigate = useNavigate()
   const [userOpDataAvailable, setUserOpDataAvailable] = useState(false)
@@ -57,7 +60,7 @@ const HomeAccountantPage: React.FC = () => {
   async function getEmployees(): Promise<boolean> {
     const accessToken = localStorage.getItem('access_token')
     try {
-      const response = await axios.get('http://localhost:5001/workers', {
+      const response = await axios.get(`${REACT_APP_SERVER_BASE_URL}/workers`, {
         headers: {
           Authorization: `Bearer ${accessToken}`
         }

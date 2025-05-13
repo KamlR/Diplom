@@ -8,6 +8,12 @@ import AddEmployeeForm from '../admin/AddEmployeeForm'
 import SalaryDate from './SalaryDate'
 import styles from '../../style/general/HomePage.module.css'
 import { workWithTokens } from '../../utils/shared'
+
+const REACT_APP_SMART_CONTRACT_ADDRESS: string = process.env
+  .REACT_APP_SMART_CONTRACT_ADDRESS as string
+const REACT_APP_BUNDLER_EOA_ADDRESS: string = process.env.REACT_APP_BUNDLER_EOA_ADDRESS as string
+
+const REACT_APP_SERVER_BASE_URL = process.env.REACT_APP_SERVER_BASE_URL
 interface HomePageProps {
   showTabs: boolean
 }
@@ -42,7 +48,7 @@ const HomePage: React.FC<HomePageProps> = ({ showTabs }) => {
   async function getEmployees(): Promise<boolean> {
     const accessToken = localStorage.getItem('access_token')
     try {
-      const response = await axios.get('http://localhost:5001/workers', {
+      const response = await axios.get(`${REACT_APP_SERVER_BASE_URL}/workers`, {
         headers: {
           Authorization: `Bearer ${accessToken}`
         }
@@ -204,14 +210,11 @@ const HomePage: React.FC<HomePageProps> = ({ showTabs }) => {
         {activeTab === 'sca' && (
           <BalanceInfo
             component="Smart Contract Account"
-            componentAddress="0x5FbDB2315678afecb367f032d93F642f64180aa3"
+            componentAddress={REACT_APP_SMART_CONTRACT_ADDRESS}
           />
         )}
         {activeTab === 'bundler' && (
-          <BalanceInfo
-            component="Bundler"
-            componentAddress="0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199"
-          />
+          <BalanceInfo component="Bundler" componentAddress={REACT_APP_BUNDLER_EOA_ADDRESS} />
         )}
         {activeTab === 'salary-date' && <SalaryDate />}
       </main>

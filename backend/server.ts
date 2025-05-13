@@ -1,16 +1,16 @@
 import express from 'express'
 import { logger } from './src/logger'
 import authorizationController from './src/controllers/workers_crm/authrorization/authorization'
-import tokensController from './src/tokens/tokensApi'
+import tokensController from './src/controllers/tokens/tokensApi'
 import workersController from './src/controllers/workers/crud'
 import salaryController from './src/controllers/salary/salaryPaymentProcess'
 //import './src/controllers/salary/cronTasks'
-import './src/controllers/salary/telegram'
+import './src/telegram/telegram'
 import { connectToDatabase } from './database/src/database'
-import { startPayrollJob } from './src/controllers/salary/cronTasks'
+import { startPayrollJob } from './src/cron-task/cronTasks'
 
-const cookieParser = require('cookie-parser')
-const cors = require('cors')
+import cookieParser from 'cookie-parser'
+import cors from 'cors'
 
 const app = express()
 
@@ -19,7 +19,7 @@ app.use(cookieParser())
 app.use(express.json())
 app.use(
   cors({
-    origin: 'http://localhost:3000', // Фронтенд
+    origin: 'http://frontend:3000', // Фронтенд
     credentials: true, // Разрешаем отправку кук
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
   })
@@ -31,7 +31,7 @@ app.use((req, res, next) => {
 })
 connectToDatabase()
 
-app.use('/workers_crm', authorizationController)
+app.use('/workers-crm', authorizationController)
 app.use('/tokens', tokensController)
 app.use('/workers', workersController)
 app.use('/salary', salaryController)

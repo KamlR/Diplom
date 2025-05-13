@@ -1,10 +1,13 @@
 import fs from 'fs'
 import axios from 'axios'
-import { sendMessages } from '../telegram'
-import Accountant from '../../../../database/src/models/accountant'
+import { sendMessages } from '../telegram/telegram'
+import Accountant from '../../database/src/models/accountant'
+import dotenv from 'dotenv'
+
+dotenv.config({ path: './env/blockchain.env' })
+const { BUNDLER_BASE_URL, ENTRYPOINT_ADDRESS } = process.env
 
 export async function callBundler() {
-  const entryPoint = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
   const rawData = fs.readFileSync('userOpData.json', 'utf-8')
   let userOperationData = JSON.parse(rawData).userOp
 
@@ -14,10 +17,10 @@ export async function callBundler() {
     '0x' + accountantsData.map(accountant => accountant.signature.slice(2)).join('')
   try {
     const response = await axios.post(
-      'http://localhost:4337/send-user-operation',
+      `${BUNDLER_BASE_URL}/send-user-operation`,
       {
         userOp: userOperationData,
-        entryPoint: entryPoint
+        entryPoint: ENTRYPOINT_ADDRESS
       },
       {
         headers: {

@@ -2,13 +2,16 @@ import express, { Request, Response } from 'express'
 import WorkerCrm from '../../../../database/src/models/workerCrm'
 import Accountant from '../../../../database/src/models/accountant'
 import { validateAuthorization, validateAddInfoSchema } from './schemas'
-import AuthMiddleware from '../../../tokens/AuthMiddleware'
+import AuthMiddleware from '../../tokens/AuthMiddleware'
 import { ethers } from 'ethers'
+import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 
-dotenv.config()
+dotenv.config({ path: './env/api.env' })
 
-const jwt = require('jsonwebtoken')
+const ACCESS_TOKEN_KEY: string = process.env.ACCESS_TOKEN_KEY as string
+const REFRESH_TOKEN_KEY: string = process.env.REFRESH_TOKEN_KEY as string
+
 const authorizationController = express.Router()
 
 authorizationController.post('/authorize', async (req: Request, res: Response) => {
@@ -46,10 +49,10 @@ authorizationController.post('/authorize', async (req: Request, res: Response) =
     res.status(500).json({ error: 'Internal server error' })
     return
   }
-  const accessToken = jwt.sign({ expectedWalletAddress }, process.env.ACCESS_TOKEN_KEY, {
+  const accessToken = jwt.sign({ expectedWalletAddress }, ACCESS_TOKEN_KEY, {
     expiresIn: '10h'
   })
-  const refreshToken = jwt.sign({ expectedWalletAddress }, process.env.REFRESH_TOKEN_KEY, {
+  const refreshToken = jwt.sign({ expectedWalletAddress }, REFRESH_TOKEN_KEY, {
     expiresIn: '7d'
   })
 

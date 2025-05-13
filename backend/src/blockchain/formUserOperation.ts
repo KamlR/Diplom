@@ -1,7 +1,13 @@
 import { ethers } from 'ethers'
 import { getUserOpHash } from '@account-abstraction/utils'
 import fs from 'fs'
-import Worker from '../../../database/src/models/worker'
+import Worker from '../../database/src/models/worker'
+import dotenv from 'dotenv'
+
+dotenv.config({ path: './env/blockchain.env' })
+const SMART_CONTRACT_ADDRESS: string = process.env.SMART_CONTRACT_ADDRESS as string
+const ENTRYPOINT_ADDRESS: string = process.env.ENTRYPOINT_ADDRESS as string
+const CHAIN_ID: string = process.env.CHAIN_ID as string
 
 export async function formUserOperation() {
   const workers = await Worker.find({}, 'walletAddress salary')
@@ -12,7 +18,7 @@ export async function formUserOperation() {
   const callData = iface.encodeFunctionData('paySalary', [addresses, salaries])
 
   const userOp = {
-    sender: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+    sender: SMART_CONTRACT_ADDRESS,
     nonce: 0,
     initCode: '0x',
     callData: callData,
@@ -25,10 +31,7 @@ export async function formUserOperation() {
     signature: '0x'
   }
 
-  const entryPointAddress = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
-  const chainId = 1337
-
-  const userOpHash = getUserOpHash(userOp, entryPointAddress, chainId)
+  const userOpHash = getUserOpHash(userOp, ENTRYPOINT_ADDRESS, Number(CHAIN_ID))
   const data = { userOp, userOpHash }
   fs.writeFileSync('userOpData.json', JSON.stringify(data, null, 2), 'utf-8')
 }

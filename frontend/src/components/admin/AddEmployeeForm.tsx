@@ -6,7 +6,8 @@ import { checkData } from '../../utils/regexValidation'
 import { Employee } from '../../models/employee'
 import styles from '../../style/admin/AddEmployeeForm.module.css'
 import { ToastContainer, toast } from 'react-toastify'
-import e from 'express'
+
+const { REACT_APP_SERVER_BASE_URL } = process.env
 
 interface AddEmployeeFormProps {
   onAddEmployee: (newEmployee: Employee) => void
@@ -125,7 +126,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
         position: employee.position,
         department: employee.department
       }
-      const response = await axios.post('http://localhost:5001/workers', employeeToSend, {
+      const response = await axios.post(`${REACT_APP_SERVER_BASE_URL}/workers`, employeeToSend, {
         headers: {
           Authorization: `Bearer ${accessToken}`
         }
@@ -155,7 +156,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
         department: employee.department
       }
       const response = await axios.put(
-        `http://localhost:5001/workers/${employee._id}`,
+        `${REACT_APP_SERVER_BASE_URL}/workers/${employee._id}`,
         employeeToSend,
         {
           headers: {
@@ -180,7 +181,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
   async function deleteEmployee(): Promise<boolean> {
     try {
       const accessToken = localStorage.getItem('access_token')
-      const response = await axios.delete(`http://localhost:5001/workers/${employee._id}`, {
+      const response = await axios.delete(`${REACT_APP_SERVER_BASE_URL}/workers/${employee._id}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`
         }

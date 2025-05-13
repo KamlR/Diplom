@@ -1,8 +1,10 @@
 import { Request, Response, NextFunction } from 'express'
-const jwt = require('jsonwebtoken')
+import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 
-dotenv.config()
+dotenv.config({ path: './env/api.env' })
+
+const ACCESS_TOKEN_KEY: string = process.env.ACCESS_TOKEN_KEY as string
 
 class AuthMiddleware {
   static verifyToken(req: Request, res: Response, next: NextFunction) {
@@ -17,7 +19,7 @@ class AuthMiddleware {
       return
     }
 
-    jwt.verify(token, process.env.ACCESS_TOKEN_KEY, (err: any, decoded: any) => {
+    jwt.verify(token, ACCESS_TOKEN_KEY, (err: any, decoded: any) => {
       if (err) {
         if (err.name === 'TokenExpiredError') {
           return res.status(401).json({ error: 'The token has expired' })

@@ -5,6 +5,9 @@ import styles from '../../style/accountant/ChangeEmployeeData.module.css'
 import { Employee } from '../../models/employee'
 import { ToastContainer, toast } from 'react-toastify'
 import { workWithTokens } from '../../utils/shared'
+
+const { REACT_APP_SERVER_BASE_URL } = process.env
+
 interface ChangeEmployeeDataProps {
   onClose: () => void
   onCnangeEmployee: (updatedEmployee: Employee) => void
@@ -55,7 +58,7 @@ const ChangeEmployeeData: React.FC<ChangeEmployeeDataProps> = ({
         department: employee.department
       }
       const response = await axios.put(
-        `http://localhost:5001/workers/${employee._id}`,
+        `${REACT_APP_SERVER_BASE_URL}/workers/${employee._id}`,
         employeeToSend,
         {
           headers: {

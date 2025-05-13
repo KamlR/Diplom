@@ -1,10 +1,15 @@
 import express from 'express'
 import { logger } from './logger'
-import { ethers, JsonRpcProvider, JsonRpcSigner } from 'ethers'
+import { ethers, JsonRpcProvider, JsonRpcSigner, Wallet } from 'ethers'
 import abi from './abis/EntryPoint.json'
 import { UserOperation } from './userOperation'
-const cors = require('cors')
-const PORT = 4337
+import cors from 'cors'
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+const { JSON_RPC_SERVER_URL, PORT } = process.env
+const BUNDLER_EOA_PRIVATE_KEY: string = process.env.BUNDLER_EOA_PRIVATE_KEY as string
 
 const app = express()
 
@@ -39,13 +44,13 @@ app.post('/send-user-operation', async (req, res) => {
 })
 
 async function getProviderAndSigner() {
-  const provider = new ethers.JsonRpcProvider('http://localhost:8545')
-  const signer = await provider.getSigner(19)
+  const provider = new ethers.JsonRpcProvider(JSON_RPC_SERVER_URL)
+  const signer = new ethers.Wallet(BUNDLER_EOA_PRIVATE_KEY, provider)
   return [provider, signer]
 }
 
 async function validateUserOp(
-  provider: JsonRpcProvider | JsonRpcSigner,
+  provider: JsonRpcProvider | Wallet,
   entryPoint: string,
   userOp: UserOperation
 ) {

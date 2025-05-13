@@ -3,6 +3,8 @@ import { ethers } from 'ethers'
 import styles from '../../../style/admin/BalanceInfo.module.css'
 import AddToBalance from './AddToBalance'
 
+const { REACT_APP_JSON_RPC_SERVER_URL } = process.env
+
 interface BalanceInfoProps {
   component: string
   componentAddress: string
@@ -26,9 +28,8 @@ const BalanceInfo: React.FC<BalanceInfoProps> = ({ component, componentAddress }
     setErrorMessage('')
     setBalanceETH('-')
     setBalanceWEI('-')
-    const networkUrl = 'http://127.0.0.1:8545'
     try {
-      const provider = new ethers.JsonRpcProvider(networkUrl)
+      const provider = new ethers.JsonRpcProvider(REACT_APP_JSON_RPC_SERVER_URL)
       const balance = await provider.getBalance(componentAddress)
       setBalanceWEI(balance.toString())
       setBalanceETH(ethers.formatEther(balance).toString())
@@ -75,11 +76,7 @@ const BalanceInfo: React.FC<BalanceInfoProps> = ({ component, componentAddress }
       </div>
 
       {isFormOpen && (
-        <AddToBalance
-          onClose={closeForm}
-          receiver={component}
-          receiverAddress={componentAddress}
-        />
+        <AddToBalance onClose={closeForm} receiver={component} receiverAddress={componentAddress} />
       )}
     </div>
   )

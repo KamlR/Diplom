@@ -1,18 +1,19 @@
 import axios from 'axios'
 import { NavigateFunction } from 'react-router-dom'
 
+const { REACT_APP_SERVER_BASE_URL } = process.env
+
 export async function workWithTokens(error: any, navigate: NavigateFunction) {
   if (error.response.data.error === 'The authorization token is invalid') {
     navigate('/authorization1')
     return false
   } else {
     try {
-      const response = await axios.get('http://localhost:5001/tokens/refresh', {
+      const response = await axios.get(`${REACT_APP_SERVER_BASE_URL}/tokens/refresh`, {
         withCredentials: true
       })
       if (response.status == 200) {
         const { accessToken } = await response.data
-        console.log(accessToken)
         localStorage.setItem('access_token', accessToken)
         return true
       }
@@ -26,7 +27,7 @@ export async function workWithTokens(error: any, navigate: NavigateFunction) {
 export async function getRole(navigate: NavigateFunction): Promise<string> {
   const accessToken = localStorage.getItem('access_token')
   try {
-    const response = await axios.get('http://localhost:5001/workers_crm/role', {
+    const response = await axios.get(`${REACT_APP_SERVER_BASE_URL}/workers_crm/role`, {
       withCredentials: true,
       headers: {
         Authorization: `Bearer ${accessToken}`

@@ -6,6 +6,8 @@ import { ToastContainer, toast } from 'react-toastify'
 import { checkData } from '../../utils/regexValidation'
 import { formUserOperation } from '../../utils/accountAbstraction'
 
+const { REACT_APP_BUNDLER_BASE_URL, REACT_APP_ENTRYPOINT_ADDRESS } = process.env
+
 const GiveAccess: React.FC = () => {
   const [borderAddressStyle, setBorderAddressStyle] = useState<React.CSSProperties>({
     border: '1px solid #dddddd'
@@ -78,13 +80,12 @@ const GiveAccess: React.FC = () => {
   }
 
   async function sendUserOperation(userOp: any): Promise<[boolean, string]> {
-    const entryPoint = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
     try {
       const response = await axios.post(
-        'http://localhost:4337/send-user-operation',
+        `${REACT_APP_BUNDLER_BASE_URL}/send-user-operation`,
         {
           userOp,
-          entryPoint
+          entryPoint: REACT_APP_ENTRYPOINT_ADDRESS
         },
         {
           headers: {

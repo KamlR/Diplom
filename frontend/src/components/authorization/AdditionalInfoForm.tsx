@@ -8,6 +8,8 @@ import { ToastContainer, toast } from 'react-toastify'
 import styles from '../../style/general/AdditionalInfoForm.module.css'
 import generalStyles from '../../style/general/General.module.css'
 
+const { REACT_APP_SERVER_BASE_URL } = process.env
+
 const AditionalInfoForm: React.FC = () => {
   const navigate = useNavigate()
   const [firstName, setFirstName] = useState<string>('')
@@ -54,7 +56,7 @@ const AditionalInfoForm: React.FC = () => {
     try {
       const accessToken = localStorage.getItem('access_token')
       const response = await axios.post(
-        'http://localhost:5001/workers_crm/add_info',
+        `${REACT_APP_SERVER_BASE_URL}/workers-crm/add_info`,
         {
           firstName,
           lastName,

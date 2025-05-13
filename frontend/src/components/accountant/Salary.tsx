@@ -5,6 +5,9 @@ import styles from '../../style/accountant/Salary.module.css'
 import { workWithTokens } from '../../utils/shared'
 import axios from 'axios'
 import { ethers } from 'ethers'
+
+const { REACT_APP_SERVER_BASE_URL } = process.env
+
 interface SalaryProps {
   userOpDataAvailable: boolean
   setUserOpDataAvailable: React.Dispatch<React.SetStateAction<boolean>>
@@ -69,7 +72,7 @@ const Salary: React.FC<SalaryProps> = ({ userOpDataAvailable, setUserOpDataAvail
     try {
       const accessToken = localStorage.getItem('access_token')
       const response = await axios.post(
-        'http://localhost:5001/salary/sign-salary-userop',
+        `${REACT_APP_SERVER_BASE_URL}/salary/sign-salary-userop`,
         { signature },
         {
           headers: {
@@ -93,7 +96,7 @@ const Salary: React.FC<SalaryProps> = ({ userOpDataAvailable, setUserOpDataAvail
   const getUserOpHash = async (): Promise<string | null> => {
     const accessToken = localStorage.getItem('access_token')
     try {
-      const response = await axios.get('http://localhost:5001/salary/user-op-hash', {
+      const response = await axios.get(`${REACT_APP_SERVER_BASE_URL}/salary/user-op-hash`, {
         withCredentials: true,
         headers: {
           Authorization: `Bearer ${accessToken}`
@@ -114,7 +117,9 @@ const Salary: React.FC<SalaryProps> = ({ userOpDataAvailable, setUserOpDataAvail
   return (
     <div>
       <div
-        className={`${styles.show_guide} ${showGuide ? styles.show_guide_open : styles.show_guide_close}`}
+        className={`${styles.show_guide} ${
+          showGuide ? styles.show_guide_open : styles.show_guide_close
+        }`}
         onClick={onClickShowGuideHandler}
       >
         {showGuide ? <b>Скрыть инструкцию ⬆️</b> : <b>Показать инструкцию ⬇️</b>}

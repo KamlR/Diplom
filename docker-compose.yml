@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  hardhat:
+    build: ./smart-contract
+    volumes:
+      - ./shared:/shared
+    ports:
+      - "8545:8545"
+    entrypoint: ["/app/entrypoint.sh"]
+
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./shared:/shared
+    depends_on:
+      - hardhat
+    ports:
+      - "3000:3000" 
+    entrypoint: ["/app/entrypoint.sh"]
+
+  backend:
+    build: ./backend
+    volumes:
+      - ./shared:/shared
+    depends_on:
+      - hardhat
+      - mongodb
+    ports:
+      - "5001:5001" 
+    entrypoint: ["/app/entrypoint.sh"]
+
+  bundler:
+    build: ./bundler
+    ports:
+      - "4337:4337" 
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27019:27017"
+    volumes:
+      - ./mongodb/init.js:/docker-entrypoint-initdb.d/init.js:ro

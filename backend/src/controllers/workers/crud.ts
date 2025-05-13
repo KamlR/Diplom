@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express'
 import { validateAddEmployee, validateChangeEmployee, validateDeleteEmployee } from './schemas'
 import Worker from '../../../database/src/models/worker'
 import Accountant from '../../../database/src/models/accountant'
-import AuthMiddleware from '../../tokens/AuthMiddleware'
+import AuthMiddleware from '../tokens/AuthMiddleware'
 
 import fs from 'fs'
 
@@ -34,10 +34,8 @@ workersController.post('', AuthMiddleware.verifyToken, async (req: Request, res:
   }
 })
 
-// TODO: проверить, если ли в бд с таким id кто-то
 // TODO: подставляется walletAddress другой в verifyToken
 workersController.put('/:id', AuthMiddleware.verifyToken, async (req: Request, res: Response) => {
-  console.log(req)
   const valid = validateChangeEmployee({
     params: req.params,
     body: req.body
@@ -66,8 +64,6 @@ workersController.put('/:id', AuthMiddleware.verifyToken, async (req: Request, r
   }
 })
 
-// TODO: проверка, что переданный ID есть
-// TODO: добавить схему валидации
 workersController.delete(
   '/:id',
   AuthMiddleware.verifyToken,

@@ -1,10 +1,10 @@
 import express, { Request, Response } from 'express'
 import dotenv from 'dotenv'
 import { validateToken } from './shemas'
-
-dotenv.config()
-
 const jwt = require('jsonwebtoken')
+dotenv.config({ path: './env/api.env' })
+
+const { REFRESH_TOKEN_KEY, ACCESS_TOKEN_KEY } = process.env
 
 const tokensController = express.Router()
 
@@ -16,7 +16,7 @@ tokensController.get('/refresh', async (req: Request, res: Response) => {
     return
   }
 
-  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_KEY, (err: any, decoded: any) => {
+  jwt.verify(refreshToken, REFRESH_TOKEN_KEY, (err: any, decoded: any) => {
     if (err) {
       if (err.name === 'TokenExpiredError') {
         return res.status(401).json({ error: 'The token has expired' })
@@ -24,7 +24,9 @@ tokensController.get('/refresh', async (req: Request, res: Response) => {
       return res.status(401).json({ error: 'The authorization token is invalid' })
     }
     const { walletAddress } = decoded
-    const accessToken = jwt.sign({ walletAddress }, process.env.ACCESS_TOKEN_KEY, { expiresIn: '1h' })
+    const accessToken = jwt.sign({ walletAddress }, ACCESS_TOKEN_KEY, {
+      expiresIn: '1h'
+    })
     return res.status(200).json({ accessToken: accessToken })
   })
 })

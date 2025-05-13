@@ -1,7 +1,7 @@
 import cron from 'node-cron'
 import { ScheduledTask } from 'node-cron'
-import { formUserOperation } from '../salary/formUserOperation'
-import { sendMessages } from './telegram'
+import { formUserOperation } from '../blockchain/formUserOperation'
+import { sendMessages } from '../telegram/telegram'
 
 let payrollCronJob: ScheduledTask | null = null
 let allertingCronJob: ScheduledTask | null = null
