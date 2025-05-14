@@ -50,7 +50,11 @@ const SalaryDate: React.FC = () => {
           return
         }
       }
-      setErrorMessage('Ошибка получения даты выплаты зарплат!')
+      if (error?.response?.data?.error == 'The date has not been set yet') {
+        setErrorMessage('Дата выплат ещё не была выбрана!')
+      } else {
+        setErrorMessage('Ошибка получения даты выплаты зарплат!')
+      }
     } finally {
       setTimeout(() => setIsLoading(false), 1000)
     }

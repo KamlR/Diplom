@@ -54,7 +54,7 @@ const TelegamBot: React.FC = () => {
     const accessToken = localStorage.getItem('access_token')
     try {
       const response = await axios.get(
-        `${REACT_APP_SERVER_BASE_URL}/workers_crm/check-telegrambot-connection`,
+        `${REACT_APP_SERVER_BASE_URL}/workers-crm/check-telegrambot-connection`,
         {
           withCredentials: true,
           headers: {

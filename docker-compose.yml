@@ -35,8 +35,6 @@ services:
     ports:
       - "4337:4337" 
   mongodb:
-    image: mongo:latest
+    build: ./mongodb
     ports:
       - "27019:27017"
-    volumes:
-      - ./mongodb/init.js:/docker-entrypoint-initdb.d/init.js:ro

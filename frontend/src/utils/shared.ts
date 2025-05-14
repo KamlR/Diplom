@@ -27,7 +27,7 @@ export async function workWithTokens(error: any, navigate: NavigateFunction) {
 export async function getRole(navigate: NavigateFunction): Promise<string> {
   const accessToken = localStorage.getItem('access_token')
   try {
-    const response = await axios.get(`${REACT_APP_SERVER_BASE_URL}/workers_crm/role`, {
+    const response = await axios.get(`${REACT_APP_SERVER_BASE_URL}/workers-crm/role`, {
       withCredentials: true,
       headers: {
         Authorization: `Bearer ${accessToken}`

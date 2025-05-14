@@ -66,7 +66,11 @@ salaryController.put(
     const { newDate } = req.body
     const cronSchedule = convertScheduleToCron(newDate)
     try {
-      await CronJob.updateOne({ job: 'payroll' }, { $set: { schedule: cronSchedule } })
+      await CronJob.updateOne(
+        { job: 'payroll' },
+        { $set: { schedule: cronSchedule } },
+        { upsert: true }
+      )
       startPayrollJob(cronSchedule)
       res.status(200).json({})
     } catch (error: any) {
@@ -79,6 +83,10 @@ salaryController.get('/date', AuthMiddleware.verifyToken, async (req: Request, r
   let result
   try {
     result = await CronJob.findOne({ job: 'payroll' })
+    if (result === null) {
+      res.status(500).json({ error: 'The date has not been set yet' })
+      return
+    }
     if (!result?.schedule) {
       res.status(400).json({ error: 'Schedule is not defined' })
       return
@@ -99,6 +107,19 @@ function convertScheduleToCron(date: string) {
   const [hour, minute, second] = timePart.split(':').map(Number)
   const [year, month, day] = datePart.split('-').map(Number)
   return `${minute} ${hour} ${day} * *`
+}
+
+export async function getSalaryDateAndStartCron() {
+  try {
+    const result = await CronJob.findOne({ job: 'payroll' })
+    if (result === null || !result?.schedule) {
+      console.log('Дата зарплат не задана!')
+      return
+    }
+    startPayrollJob(result.schedule)
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 export default salaryController

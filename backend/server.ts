@@ -7,7 +7,6 @@ import salaryController from './src/controllers/salary/salaryPaymentProcess'
 //import './src/controllers/salary/cronTasks'
 import './src/telegram/telegram'
 import { connectToDatabase } from './database/src/database'
-import { startPayrollJob } from './src/cron-task/cronTasks'
 
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
@@ -19,7 +18,7 @@ app.use(cookieParser())
 app.use(express.json())
 app.use(
   cors({
-    origin: 'http://frontend:3000', // Фронтенд
+    origin: 'http://localhost:3000', // Фронтенд
     credentials: true, // Разрешаем отправку кук
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
   })
