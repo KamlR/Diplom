@@ -56,6 +56,10 @@ contract CryptoPayments {
         address wallet,
         string memory role
     ) external returns (bool) {
+        require(
+            bytes(usersWithAccess[wallet]).length == 0,
+            "User already has access"
+        );
         usersWithAccess[wallet] = role;
         return true;
     }

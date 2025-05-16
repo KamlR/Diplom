@@ -116,6 +116,8 @@ const GiveAccess: React.FC = () => {
             errorMessageForUser =
               'Данная транзакция может быть выполнена только от лица accountant!'
             break
+          case 'User already has access':
+            errorMessageForUser = 'У пользователя с указанным адресом уже есть доступ к системе'
         }
         return [false, errorMessageForUser]
       } else {
