@@ -8,7 +8,7 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-const { JSON_RPC_SERVER_URL, PORT } = process.env
+const { JSON_RPC_SERVER_URL, BUNDLER_BASE_URL, PORT } = process.env
 const BUNDLER_EOA_PRIVATE_KEY: string = process.env.BUNDLER_EOA_PRIVATE_KEY as string
 
 const app = express()
@@ -64,5 +64,5 @@ async function validateUserOp(
   return result
 }
 app.listen(PORT, () => {
-  console.log(`🚀 Бандлер слушает на http://localhost:${PORT}`)
+  console.log(`🚀 Бандлер слушает на ${BUNDLER_BASE_URL}`)
 })

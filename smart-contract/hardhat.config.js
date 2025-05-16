@@ -5,7 +5,7 @@ module.exports = {
   solidity: '0.8.20',
   networks: {
     hardhat: {
-      chainId: 1337 // Это дефолтное значение для локальной сети Hardhat
+      chainId: 1337
     }
   }
 }

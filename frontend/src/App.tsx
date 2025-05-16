@@ -7,7 +7,7 @@ import AditionalInfoForm from './components/authorization/AdditionalInfoForm'
 import HomeAdminPage from './components/admin/HomeAdmin'
 import HomeHRPage from './components/hr/HomeHr'
 import HomeAccountantPage from './components/accountant/HomeAccountant'
-import TelegamBot from './components/accountant/TelegramBot'
+import TelegamBot from './components/authorization/TelegramBot'
 import ProtectedRoute from './ProtectedRoute'
 
 const App: React.FC = () => {
