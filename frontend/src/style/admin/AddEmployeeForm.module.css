@@ -141,3 +141,15 @@ h2 {
   background-color: #555;
   color: #ddd;
 }
+
+.inputGroup input:invalid {
+  border: 2px solid rgb(226, 68, 56);
+}
+
+.form:invalid button[type="submit"] {
+  background-color: #b3c9e2
+}
+
+.form:valid button[type="submit"] {
+  background-color: #4A90E2
+}

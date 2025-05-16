@@ -4,19 +4,21 @@ export function checkData(
   type: string,
   setValidData: (valid: boolean) => void,
   setBorderStyle: (style: React.CSSProperties) => void
-) {
+): boolean {
   if (value == '') {
     setValidData(false)
     setNeutralBorderColor(type, setBorderStyle)
-    return
+    return false
   }
   const isValid = regex.test(value)
   if (!isValid) {
     setValidData(false)
     setBorderStyle({ border: '2px solid rgb(226, 68, 56)' })
+    return false
   } else {
     setValidData(true)
     setNeutralBorderColor(type, setBorderStyle)
+    return true
   }
 }
 

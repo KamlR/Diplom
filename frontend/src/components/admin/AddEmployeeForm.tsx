@@ -36,18 +36,11 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
   const [title, setTitle] = useState('')
   const [employee, setEmployee] = useState<Employee>(employeeFromHome)
   const [validData, setValidData] = useState(true)
-  const [borderWalletAddressStyle, setBorderWalletAddressStyle] = useState<React.CSSProperties>({
-    border: '1px solid #dddddd'
-  })
-  const [saveButtonStyle, setSaveButtonStyle] = useState<React.CSSProperties>({
-    backgroundColor: '#b3c9e2'
-  })
   useEffect(() => {
     if (mode == 'add') {
       setTitle('Добавление сотрудника')
       setRightButtonText('Добавить')
     } else if (mode == 'change') {
-      setSaveButtonStyle({ backgroundColor: '#4A90E2' })
       setTitle('Редактирование сотрудника')
       setRightButtonText('Сохранить')
       setLeftButtonText('Удалить')
@@ -62,25 +55,6 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
     }
 
     setEmployee(updatedEmployee)
-    if (name == 'walletAddress') {
-      const regex = /^0x[a-fA-F0-9]{40}$/
-      checkData(value, regex, 'employee', setValidData, setBorderWalletAddressStyle)
-    }
-    if (validData && checkFieldsForEmpty(updatedEmployee)) {
-      setSaveButtonStyle({ backgroundColor: '#4A90E2' })
-    } else {
-      setSaveButtonStyle({ backgroundColor: '#b3c9e2' })
-    }
-  }
-
-  function checkFieldsForEmpty(employee: Employee): boolean {
-    return (Object.keys(employee) as (keyof Employee)[]).every(key => {
-      if (key == '_id') {
-        return true
-      }
-      const value = employee[key]
-      return value !== ''
-    })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -242,7 +216,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
           <h2>{title}</h2>
         </div>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.formGrid}>
             <div className={styles.inputGroup}>
               <label>Имя:</label>
@@ -282,9 +256,9 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
               <input
                 type="text"
                 name="walletAddress"
+                pattern="^0x[a-fA-F0-9]{40}$"
                 value={employee.walletAddress}
                 onChange={handleChange}
-                style={borderWalletAddressStyle}
                 required
               />
             </div>
@@ -322,7 +296,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
                 {leftButtonText}
               </button>
             )}
-            <button type="submit" className={styles.rightButton} style={saveButtonStyle}>
+            <button type="submit" className={styles.rightButton}>
               {rightButtonText}
             </button>
           </div>

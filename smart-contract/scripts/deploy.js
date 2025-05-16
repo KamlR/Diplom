@@ -13,12 +13,12 @@ async function main() {
   const cryptoPayments = await CryptoPayments.deploy(walletAddresses, roles, entryPoint.target)
 
   const frontendEnv = `REACT_APP_ENTRYPOINT_ADDRESS=${entryPoint.target}
-  REACT_APP_SMART_CONTRACT_ADDRESS=${cryptoPayments.target}
-  `
+REACT_APP_SMART_CONTRACT_ADDRESS=${cryptoPayments.target}
+`
 
   const backendEnv = `ENTRYPOINT_ADDRESS=${entryPoint.target}
-  SMART_CONTRACT_ADDRESS=${cryptoPayments.target}
-  `
+SMART_CONTRACT_ADDRESS=${cryptoPayments.target}
+`
 
   fs.writeFileSync('/shared/frontend.env', frontendEnv)
   fs.writeFileSync('/shared/backend.env', backendEnv)
