@@ -248,6 +248,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({
                 value={employee.salary}
                 onChange={handleChange}
                 maxLength={35}
+                step="any"
                 required
               />
             </div>

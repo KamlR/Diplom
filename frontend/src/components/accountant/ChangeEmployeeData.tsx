@@ -107,6 +107,7 @@ const ChangeEmployeeData: React.FC<ChangeEmployeeDataProps> = ({
                 name="salary"
                 value={employee.salary}
                 onChange={handleChange}
+                step="any"
                 required
               />
             </div>

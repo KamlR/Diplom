@@ -35,6 +35,7 @@ export async function callBundler() {
       await changeSignStatusToFalse()
     }
   } catch (error: any) {
+    await Accountant.updateMany({ signStatus: true }, { $set: { signStatus: false } })
     console.error('❌ Ошибка при отправке в бандлер:', error.response?.data || error.message)
   }
 }
